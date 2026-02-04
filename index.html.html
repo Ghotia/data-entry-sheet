@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry Sheet with Auto-Sort</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px 30px;
+            position: relative;
+        }
+        
+        .developer-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.85;
+            font-weight: 300;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+        
+        .data-entry {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            background-color: #f9fafc;
+            border-right: 1px solid #eaeef2;
+        }
+        
+        .data-display {
+            flex: 2;
+            min-width: 500px;
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d9e6;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4a6491;
+            box-shadow: 0 0 0 2px rgba(74, 100, 145, 0.2);
+        }
+        
+        .category-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .category-input-container input {
+            flex: 1;
+        }
+        
+        .category-input-container button {
+            background: #4a6491;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .category-input-container button:hover {
+            background: #3a5481;
+        }
+        
+        .category-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .category-tag {
+            background: #e8f4fc;
+            border: 1px solid #4a6491;
+            color: #2c3e50;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .category-tag:hover {
+            background: #4a6491;
+            color: white;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4a6491;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #3a5481;
+        }
+        
+        .btn-reset {
+            background: #95a5a6;
+        }
+        
+        .btn-reset:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn-sort {
+            background: #27ae60;
+        }
+        
+        .btn-sort:hover {
+            background: #219653;
+        }
+        
+        .btn-download {
+            background: #9b59b6;
+        }
+        
+        .btn-download:hover {
+            background: #8e44ad;
+        }
+        
+        .btn-export {
+            background: #3498db;
+        }
+        
+        .btn-export:hover {
+            background: #2980b9;
+        }
+        
+        .form-actions {
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .instructions {
+            background-color: #e8f4fc;
+            border-left: 4px solid #4a6491;
+            padding: 15px;
+            margin-top: 25px;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        th {
+            background-color: #4a6491;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        th:hover {
+            background-color: #3a5481;
+        }
+        
+        th i {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        tr:hover {
+            background-color: #f5f9ff;
+        }
+        
+        .sort-indicator {
+            display: inline-block;
+            margin-left: 5px;
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9fafc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .sort-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .sort-select {
+            width: auto;
+            min-width: 200px;
+        }
+        
+        .export-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .download-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .download-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .download-modal h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .download-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .download-option {
+            padding: 15px;
+            border: 2px solid #eaeef2;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .download-option:hover {
+            border-color: #4a6491;
+            background-color: #f9fafc;
+        }
+        
+        .download-option.selected {
+            border-color: #4a6491;
+            background-color: #e8f4fc;
+        }
+        
+        .download-option-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .download-option-icon {
+            font-size: 20px;
+            color: #4a6491;
+        }
+        
+        .download-option-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .download-option-desc {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-left: 30px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .footer-credit {
+            text-align: center;
+            margin-top: 10px;
+            color: #4a6491;
+            font-weight: 600;
+        }
+        
+        .footer-credit span {
+            color: #e74c3c;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .data-entry {
+                border-right: none;
+                border-bottom: 1px solid #eaeef2;
+            }
+            
+            .sort-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .export-controls {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #eaeef2;
+            margin-top: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="developer-badge">Developed by <span style="color: #ffd700;">ZABTUS</span></div>
+            <h1>Data Entry Sheet with Auto-Sort</h1>
+            <p class="subtitle">Efficient data management with automatic sorting</p>
+        </header>
+        
+        <div class="content">
+            <div class="data-entry">
+                <h2>Enter New Data</h2>
+                <form id="dataForm">
+                    <div class="form-group">
+                        <label for="name">Item Name *</label>
+                        <input type="text" id="name" required placeholder="Enter item or customer name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <div class="category-input-container">
+                            <input type="text" id="category" placeholder="Enter category">
+                            <button type="button" id="addCategoryBtn">+</button>
+                        </div>
+                        <div class="category-suggestions" id="categorySuggestions">
+                            <!-- Popular categories will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="value">Value ($)</label>
+                        <input type="number" id="value" step="0.01" placeholder="Enter numeric value">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="Active">Active</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn"><i class="fas fa-plus-circle"></i> Add Entry</button>
+                        <button type="button" class="btn btn-reset" id="resetBtn"><i class="fas fa-redo"></i> Reset Form</button>
+                    </div>
+                </form>
+                
+                <div class="instructions">
+                    <p><strong>How it works:</strong></p>
+                    <p>1. Fill in the form (Name is required)</p>
+                    <p>2. Enter any category you need</p>
+                    <p>3. Click "Add Entry" to submit data</p>
+                    <p>4. Data automatically sorts by selected column</p>
+                    <p>5. Click column headers to change sorting</p>
+                    <p>6. Export data in multiple formats using the Download button</p>
+                </div>
+            </div>
+            
+            <div class="data-display">
+                <div class="sort-controls">
+                    <h2>Data Records</h2>
+                    <div>
+                        <select id="autoSortBy" class="sort-select">
+                            <option value="name">Auto-sort by Name</option>
+                            <option value="category">Auto-sort by Category</option>
+                            <option value="value">Auto-sort by Value (High to Low)</option>
+                            <option value="date">Auto-sort by Date (Newest First)</option>
+                            <option value="status">Auto-sort by Status</option>
+                        </select>
+                        <button class="btn btn-sort" id="manualSortBtn"><i class="fas fa-sort-amount-down"></i> Sort Now</button>
+                    </div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalEntries">0</div>
+                        <div class="stat-label">Total Entries</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalValue">$0.00</div>
+                        <div class="stat-label">Total Value</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="avgValue">$0.00</div>
+                        <div class="stat-label">Average Value</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="dataTable">
+                        <thead>
+                            <tr>
+                                <th data-sort="name">Name <span class="sort-indicator">▼</span></th>
+                                <th data-sort="category">Category</th>
+                                <th data-sort="value">Value</th>
+                                <th data-sort="date">Date</th>
+                                <th data-sort="status">Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be inserted here by JavaScript -->
+                            <tr class="empty-row">
+                                <td colspan="6" class="empty-message">No data entered yet. Start by adding your first entry using the form on the left.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="export-controls">
+                    <button class="btn btn-download" id="downloadBtn">
+                        <i class="fas fa-download"></i> Download Data
+                    </button>
+                    <button class="btn btn-export" id="quickCSVBtn">
+                        <i class="fas fa-file-csv"></i> Quick CSV
+                    </button>
+                    <button class="btn btn-export" id="quickExcelBtn">
+                        <i class="fas fa-file-excel"></i> Quick Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Download Modal -->
+        <div class="download-modal" id="downloadModal">
+            <div class="download-modal-content">
+                <h3>Download Data</h3>
+                <div class="download-options">
+                    <div class="download-option" data-format="csv">
+                        <div class="download-option-header">
+                            <i class="fas fa-file-csv download-option-icon"></i>
+                            <div class="download-option-title">CSV Format</div>
+                        </div>
+                        <div class="download-option-desc">
+                            Comma-separated values - Best for spreadsheets
+                        </div>
+                    </div>
+                    
+                    <div class="download-option" data-format="excel">
+                        <div class="download-option-header">
+                            <i class="fas fa-file-excel download-option-icon"></i>
+                            <div class="download-option-title">Excel Format</div>
+                        </div>
+                        <div class="download-option-desc">
+                            Microsoft Excel file with formatting
+                        </div>
+                    </div>
+                    
+                    <div class="download-option" data-format="json">
+                        <div class="download-option-header">
+                            <i class="fas fa-code download-option-icon"></i>
+                            <div class="download-option-title">JSON Format</div>
+                        </div>
+                        <div class="download-option-desc">
+                            Structured data format for developers
+                        </div>
+                    </div>
+                    
+                    <div class="download-option" data-format="pdf">
+                        <div class="download-option-header">
+                            <i class="fas fa-file-pdf download-option-icon"></i>
+                            <div class="download-option-title">PDF Format</div>
+                        </div>
+                        <div class="download-option-desc">
+                            Printable document with table formatting
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-reset" id="cancelDownload">Cancel</button>
+                    <button class="btn btn-download" id="confirmDownload">Download</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Data Entry Sheet &copy; 2026 | Data is automatically sorted upon entry</p>
+            <p class="footer-credit">Project Developed by <span>ZABTUS</span></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize data array
+            let data = JSON.parse(localStorage.getItem('businessData')) || [];
+            let currentSortColumn = 'name';
+            let sortAscending = true;
+            let popularCategories = JSON.parse(localStorage.getItem('popularCategories')) || ['Office Supplies', 'Electronics', 'Services', 'Inventory', 'Miscellaneous'];
+            let selectedDownloadFormat = 'csv';
+            
+            // DOM elements
+            const dataForm = document.getElementById('dataForm');
+            const resetBtn = document.getElementById('resetBtn');
+            const tableBody = document.getElementById('tableBody');
+            const autoSortSelect = document.getElementById('autoSortBy');
+            const manualSortBtn = document.getElementById('manualSortBtn');
+            const totalEntriesEl = document.getElementById('totalEntries');
+            const totalValueEl = document.getElementById('totalValue');
+            const avgValueEl = document.getElementById('avgValue');
+            const categoryInput = document.getElementById('category');
+            const addCategoryBtn = document.getElementById('addCategoryBtn');
+            const categorySuggestions = document.getElementById('categorySuggestions');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const quickCSVBtn = document.getElementById('quickCSVBtn');
+            const quickExcelBtn = document.getElementById('quickExcelBtn');
+            const downloadModal = document.getElementById('downloadModal');
+            const cancelDownload = document.getElementById('cancelDownload');
+            const confirmDownload = document.getElementById('confirmDownload');
+            const downloadOptions = document.querySelectorAll('.download-option');
+            
+            // Set today's date as default
+            document.getElementById('date').valueAsDate = new Date();
+            
+            // Load existing data and display
+            updateTable();
+            updateStats();
+            updateCategorySuggestions();
+            
+            // Form submission handler
+            dataForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const name = document.getElementById('name').value.trim();
+                const category = document.getElementById('category').value.trim() || 'Uncategorized';
+                const value = parseFloat(document.getElementById('value').value) || 0;
+                const date = document.getElementById('date').value;
+                const status = document.getElementById('status').value;
+                
+                // Validate name
+                if (!name) {
+                    showNotification('Please enter a name for the entry', 'warning');
+                    document.getElementById('name').focus();
+                    return;
+                }
+                
+                // Add category to popular list if it's new
+                if (category && !popularCategories.includes(category)) {
+                    popularCategories.unshift(category);
+                    // Keep only last 10 popular categories
+                    if (popularCategories.length > 10) {
+                        popularCategories = popularCategories.slice(0, 10);
+                    }
+                    localStorage.setItem('popularCategories', JSON.stringify(popularCategories));
+                    updateCategorySuggestions();
+                }
+                
+                // Create new data object
+                const newEntry = {
+                    id: Date.now(), // Simple unique ID
+                    name,
+                    category,
+                    value,
+                    date,
+                    status,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Add to data array
+                data.push(newEntry);
+                
+                // Save to localStorage
+                saveData();
+                
+                // Get the auto-sort column
+                const sortBy = autoSortSelect.value;
+                sortData(sortBy, true);
+                
+                // Update display
+                updateTable();
+                updateStats();
+                
+                // Reset form (but keep today's date)
+                dataForm.reset();
+                document.getElementById('date').valueAsDate = new Date();
+                
+                // Show success feedback
+                showNotification(`Entry "${name}" added successfully!`, 'success');
+            });
+            
+            // Add category button
+            addCategoryBtn.addEventListener('click', function() {
+                const category = categoryInput.value.trim();
+                if (category) {
+                    if (!popularCategories.includes(category)) {
+                        popularCategories.unshift(category);
+                        // Keep only last 10 popular categories
+                        if (popularCategories.length > 10) {
+                            popularCategories = popularCategories.slice(0, 10);
+                        }
+                        localStorage.setItem('popularCategories', JSON.stringify(popularCategories));
+                        updateCategorySuggestions();
+                        showNotification(`Category "${category}" added to suggestions`, 'info');
+                    }
+                }
+            });
+            
+            // Category input enter key support
+            categoryInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const category = categoryInput.value.trim();
+                    if (category) {
+                        if (!popularCategories.includes(category)) {
+                            popularCategories.unshift(category);
+                            if (popularCategories.length > 10) {
+                                popularCategories = popularCategories.slice(0, 10);
+                            }
+                            localStorage.setItem('popularCategories', JSON.stringify(popularCategories));
+                            updateCategorySuggestions();
+                        }
+                    }
+                }
+            });
+            
+            // Update category suggestions
+            function updateCategorySuggestions() {
+                categorySuggestions.innerHTML = '';
+                popularCategories.forEach(category => {
+                    const tag = document.createElement('div');
+                    tag.className = 'category-tag';
+                    tag.textContent = category;
+                    tag.addEventListener('click', function() {
+                        categoryInput.value = category;
+                    });
+                    categorySuggestions.appendChild(tag);
+                });
+            }
+            
+            // Reset form button
+            resetBtn.addEventListener('click', function() {
+                dataForm.reset();
+                document.getElementById('date').valueAsDate = new Date();
+                showNotification('Form has been reset', 'info');
+            });
+            
+            // Manual sort button
+            manualSortBtn.addEventListener('click', function() {
+                const sortBy = autoSortSelect.value;
+                sortData(sortBy, true);
+                updateTable();
+                showNotification(`Data sorted by ${getSortLabel(sortBy)}`, 'info');
+            });
+            
+            // Auto-sort selection change
+            autoSortSelect.addEventListener('change', function() {
+                const sortBy = this.value;
+                sortData(sortBy, true);
+                updateTable();
+                showNotification(`Auto-sort changed to ${getSortLabel(sortBy)}`, 'info');
+            });
+            
+            // Table header click for sorting
+            document.querySelectorAll('th[data-sort]').forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-sort');
+                    
+                    // If clicking the same column, toggle direction
+                    if (currentSortColumn === column) {
+                        sortAscending = !sortAscending;
+                    } else {
+                        currentSortColumn = column;
+                        sortAscending = true;
+                    }
+                    
+                    // Sort data
+                    sortData(column, sortAscending);
+                    
+                    // Update table
+                    updateTable();
+                    
+                    // Update sort indicators
+                    updateSortIndicators(column, sortAscending);
+                    
+                    showNotification(`Sorted by ${column} (${sortAscending ? 'ascending' : 'descending'})`, 'info');
+                });
+            });
+            
+            // Download button click
+            downloadBtn.addEventListener('click', function() {
+                if (data.length === 0) {
+                    showNotification('No data to download. Please add some entries first.', 'warning');
+                    return;
+                }
+                downloadModal.style.display = 'flex';
+            });
+            
+            // Quick CSV button
+            quickCSVBtn.addEventListener('click', function() {
+                if (data.length === 0) {
+                    showNotification('No data to download. Please add some entries first.', 'warning');
+                    return;
+                }
+                downloadData('csv');
+            });
+            
+            // Quick Excel button
+            quickExcelBtn.addEventListener('click', function() {
+                if (data.length === 0) {
+                    showNotification('No data to download. Please add some entries first.', 'warning');
+                    return;
+                }
+                downloadData('excel');
+            });
+            
+            // Download option selection
+            downloadOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    downloadOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedDownloadFormat = this.getAttribute('data-format');
+                });
+            });
+            
+            // Set default selected option
+            downloadOptions[0].classList.add('selected');
+            
+            // Cancel download modal
+            cancelDownload.addEventListener('click', function() {
+                downloadModal.style.display = 'none';
+            });
+            
+            // Confirm download
+            confirmDownload.addEventListener('click', function() {
+                downloadModal.style.display = 'none';
+                downloadData(selectedDownloadFormat);
+            });
+            
+            // Close modal when clicking outside
+            downloadModal.addEventListener('click', function(e) {
+                if (e.target === downloadModal) {
+                    downloadModal.style.display = 'none';
+                }
+            });
+            
+            // Download data function
+            function downloadData(format) {
+                const timestamp = new Date().toISOString().slice(0, 19).replace(/[:]/g, '-');
+                const filename = `data-entry-${timestamp}`;
+                
+                switch(format) {
+                    case 'csv':
+                        downloadCSV(filename);
+                        break;
+                    case 'excel':
+                        downloadExcel(filename);
+                        break;
+                    case 'json':
+                        downloadJSON(filename);
+                        break;
+                    case 'pdf':
+                        downloadPDF(filename);
+                        break;
+                }
+                
+                showNotification(`Data exported as ${format.toUpperCase()} successfully!`, 'success');
+            }
+            
+            // Download as CSV
+            function downloadCSV(filename) {
+                let csv = 'Name,Category,Value,Date,Status\n';
+                
+                data.forEach(item => {
+                    const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US') : '';
+                    csv += `"${item.name}","${item.category}",${item.value},"${formattedDate}","${item.status}"\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${filename}.csv`;
+                link.click();
+            }
+            
+            // Download as Excel
+            function downloadExcel(filename) {
+                // Create HTML table for Excel
+                let html = `
+                    <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+                          xmlns:x="urn:schemas-microsoft-com:office:excel" 
+                          xmlns="http://www.w3.org/TR/REC-html40">
+                    <head>
+                        <meta charset="UTF-8">
+                        <!--[if gte mso 9]>
+                        <xml>
+                            <x:ExcelWorkbook>
+                                <x:ExcelWorksheets>
+                                    <x:ExcelWorksheet>
+                                        <x:Name>Data Export</x:Name>
+                                        <x:WorksheetOptions>
+                                            <x:DisplayGridlines/>
+                                        </x:WorksheetOptions>
+                                    </x:ExcelWorksheet>
+                                </x:ExcelWorksheets>
+                            </x:ExcelWorkbook>
+                        </xml>
+                        <![endif]-->
+                        <style>
+                            table { border-collapse: collapse; width: 100%; }
+                            th { background-color: #4a6491; color: white; padding: 10px; text-align: left; }
+                            td { border: 1px solid #ddd; padding: 8px; }
+                            tr:nth-child(even) { background-color: #f2f2f2; }
+                        </style>
+                    </head>
+                    <body>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Value</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                `;
+                
+                data.forEach(item => {
+                    const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US') : '';
+                    const formattedValue = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD'
+                    }).format(item.value);
+                    
+                    html += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.category}</td>
+                            <td>${formattedValue}</td>
+                            <td>${formattedDate}</td>
+                            <td>${item.status}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                    </table>
+                    <p>Total Entries: ${data.length}</p>
+                    <p>Export Date: ${new Date().toLocaleString()}</p>
+                    </body></html>
+                `;
+                
+                const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${filename}.xls`;
+                link.click();
+            }
+            
+            // Download as JSON
+            function downloadJSON(filename) {
+                const jsonData = {
+                    exportDate: new Date().toISOString(),
+                    totalEntries: data.length,
+                    totalValue: data.reduce((sum, item) => sum + item.value, 0),
+                    data: data
+                };
+                
+                const jsonString = JSON.stringify(jsonData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${filename}.json`;
+                link.click();
+            }
+            
+            // Download as PDF (simplified version)
+            function downloadPDF(filename) {
+                // Create printable HTML
+                let html = `
+                    <html>
+                    <head>
+                        <title>Data Export</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            h1 { color: #2c3e50; }
+                            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+                            th { background-color: #4a6491; color: white; padding: 10px; text-align: left; }
+                            td { border: 1px solid #ddd; padding: 8px; }
+                            .summary { margin-top: 30px; padding: 15px; background-color: #f9fafc; border-radius: 5px; }
+                        </style>
+                    </head>
+                    <body>
+                    <h1>Data Export</h1>
+                    <p>Export Date: ${new Date().toLocaleString()}</p>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Value</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                `;
+                
+                data.forEach(item => {
+                    const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US') : '';
+                    const formattedValue = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD'
+                    }).format(item.value);
+                    
+                    html += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.category}</td>
+                            <td>${formattedValue}</td>
+                            <td>${formattedDate}</td>
+                            <td>${item.status}</td>
+                        </tr>
+                    `;
+                });
+                
+                const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+                html += `
+                    </table>
+                    <div class="summary">
+                        <h3>Summary</h3>
+                        <p>Total Entries: ${data.length}</p>
+                        <p>Total Value: ${new Intl.NumberFormat('en-US', {
+                            style: 'currency',
+                            currency: 'USD'
+                        }).format(totalValue)}</p>
+                        <p>Average Value: ${new Intl.NumberFormat('en-US', {
+                            style: 'currency',
+                            currency: 'USD'
+                        }).format(data.length > 0 ? totalValue / data.length : 0)}</p>
+                    </div>
+                    </body></html>
+                `;
+                
+                // Open in new window for printing
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(html);
+                newWindow.document.close();
+                newWindow.focus();
+                
+                // Give time for content to load then trigger print
+                setTimeout(() => {
+                    newWindow.print();
+                }, 250);
+            }
+            
+            // Sort data function
+            function sortData(column, ascending = true) {
+                data.sort((a, b) => {
+                    let aVal = a[column];
+                    let bVal = b[column];
+                    
+                    // Special handling for different data types
+                    if (column === 'value') {
+                        aVal = parseFloat(aVal);
+                        bVal = parseFloat(bVal);
+                    } else if (column === 'date') {
+                        aVal = new Date(aVal).getTime();
+                        bVal = new Date(bVal).getTime();
+                    } else {
+                        // String comparison
+                        aVal = String(aVal).toLowerCase();
+                        bVal = String(bVal).toLowerCase();
+                    }
+                    
+                    if (aVal < bVal) return ascending ? -1 : 1;
+                    if (aVal > bVal) return ascending ? 1 : -1;
+                    return 0;
+                });
+                
+                // Update current sort state
+                currentSortColumn = column;
+                sortAscending = ascending;
+                
+                // Save sorted data
+                saveData();
+            }
+            
+            // Update table with current data
+            function updateTable() {
+                // Clear table body
+                tableBody.innerHTML = '';
+                
+                if (data.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr class="empty-row">
+                            <td colspan="6" class="empty-message">No data entered yet. Start by adding your first entry using the form on the left.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Add rows for each data item
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    // Format value as currency
+                    const formattedValue = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: 'USD'
+                    }).format(item.value);
+                    
+                    // Format date
+                    const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    }) : 'N/A';
+                    
+                    // Status with color coding
+                    let statusClass = '';
+                    switch(item.status) {
+                        case 'Active': statusClass = 'status-active'; break;
+                        case 'Pending': statusClass = 'status-pending'; break;
+                        case 'Completed': statusClass = 'status-completed'; break;
+                        case 'Cancelled': statusClass = 'status-cancelled'; break;
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${item.name}</td>
+                        <td><span class="category-display">${item.category}</span></td>
+                        <td>${formattedValue}</td>
+                        <td>${formattedDate}</td>
+                        <td><span class="status ${statusClass}">${item.status}</span></td>
+                        <td>
+                            <button class="btn-action delete-btn" data-id="${item.id}" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // Add delete button event listeners
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        deleteEntry(id);
+                    });
+                });
+                
+                // Update sort indicators
+                updateSortIndicators(currentSortColumn, sortAscending);
+            }
+            
+            // Update statistics
+            function updateStats() {
+                totalEntriesEl.textContent = data.length;
+                
+                const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+                const avgValue = data.length > 0 ? totalValue / data.length : 0;
+                
+                totalValueEl.textContent = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(totalValue);
+                
+                avgValueEl.textContent = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(avgValue);
+            }
+            
+            // Delete an entry
+            function deleteEntry(id) {
+                if (confirm('Are you sure you want to delete this entry?')) {
+                    data = data.filter(item => item.id !== id);
+                    saveData();
+                    
+                    // Re-sort data after deletion
+                    sortData(currentSortColumn, sortAscending);
+                    updateTable();
+                    updateStats();
+                    
+                    showNotification('Entry deleted successfully', 'warning');
+                }
+            }
+            
+            // Update sort indicators in table headers
+            function updateSortIndicators(column, ascending) {
+                // Remove all indicators
+                document.querySelectorAll('.sort-indicator').forEach(indicator => {
+                    indicator.innerHTML = '';
+                });
+                
+                // Add indicator to current sort column
+                const header = document.querySelector(`th[data-sort="${column}"] .sort-indicator`);
+                if (header) {
+                    header.innerHTML = ascending ? '▼' : '▲';
+                }
+            }
+            
+            // Get user-friendly sort label
+            function getSortLabel(sortBy) {
+                const labels = {
+                    'name': 'Name',
+                    'category': 'Category',
+                    'value': 'Value',
+                    'date': 'Date',
+                    'status': 'Status'
+                };
+                return labels[sortBy] || sortBy;
+            }
+            
+            // Save data to localStorage
+            function saveData() {
+                localStorage.setItem('businessData', JSON.stringify(data));
+            }
+            
+            // Show notification
+            function showNotification(message, type) {
+                // Remove existing notification
+                const existingNotification = document.querySelector('.notification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+                
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+                
+                // Style the notification
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.padding = '15px 20px';
+                notification.style.borderRadius = '6px';
+                notification.style.color = 'white';
+                notification.style.fontWeight = '600';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                notification.style.zIndex = '1000';
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                notification.style.transition = 'opacity 0.3s, transform 0.3s';
+                
+                // Set background color based on type
+                switch(type) {
+                    case 'success':
+                        notification.style.backgroundColor = '#27ae60';
+                        break;
+                    case 'warning':
+                        notification.style.backgroundColor = '#e74c3c';
+                        break;
+                    case 'info':
+                        notification.style.backgroundColor = '#3498db';
+                        break;
+                    default:
+                        notification.style.backgroundColor = '#2c3e50';
+                }
+                
+                // Add to document
+                document.body.appendChild(notification);
+                
+                // Trigger animation
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 10);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+            
+            // Add some CSS for status indicators
+            const style = document.createElement('style');
+            style.textContent = `
+                .status {
+                    padding: 5px 10px;
+                    border-radius: 20px;
+                    font-size: 13px;
+                    font-weight: 600;
+                }
+                .status-active { background-color: #d5f4e6; color: #27ae60; }
+                .status-pending { background-color: #fff3cd; color: #856404; }
+                .status-completed { background-color: #d1ecf1; color: #0c5460; }
+                .status-cancelled { background-color: #f8d7da; color: #721c24; }
+                .btn-action {
+                    background: none;
+                    border: none;
+                    color: #e74c3c;
+                    cursor: pointer;
+                    font-size: 16px;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    transition: background-color 0.2s;
+                }
+                .btn-action:hover {
+                    background-color: #f9ebea;
+                }
+                .category-display {
+                    background-color: #e8f4fc;
+                    padding: 5px 12px;
+                    border-radius: 4px;
+                    font-weight: 500;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
