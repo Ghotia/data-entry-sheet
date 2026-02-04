@@ -892,6 +892,20 @@
                     downloadModal.style.display = 'none';
                 }
             });
+
+            // Add this to your JavaScript to remind users to export
+            function checkLastExport() {
+                const lastExport = localStorage.getItem('lastExport');
+                const now = Date.now();
+                const oneWeek = 7 * 24 * 60 * 60 * 1000;
+    
+               if (!lastExport || (now - lastExport > oneWeek)) {
+                showNotification('Consider exporting your data for backup!', 'info');
+            }
+       }
+
+// Call this periodically
+setInterval(checkLastExport, 24 * 60 * 60 * 1000); // Daily check
             
             // Download data function
             function downloadData(format) {
