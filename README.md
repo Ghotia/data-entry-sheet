@@ -11,7 +11,7 @@ A professional, browser-based data entry system with automatic sorting and multi
 - ✅ No installation required
 
 ## Live Demo
-👉 [View Live Demo](https://your-username.github.io/repository-name/)
+👉 [View Live Demo]( https://ghotia.github.io/data-entry-sheet/)
 
 ## Usage
 1. Open the link in any browser
