@@ -1,0 +1,13 @@
+url,label
+http://www.google.com,0
+https://accounts.google.com/signin,0
+http://bit.ly/2ABCxyz,1
+http://192.168.0.1/login,1
+http://www.bank-secure-login.com/update,1
+https://github.com/explore,0
+http://paypal.com.user.verify.verify-login.info,1
+http://example.com/about,0
+https://secure-paypal.com/verify,1
+http://login.facebook.com.security-check.example.com,1
+https://twitter.com/home,0
+http://xn--example-phish.com/verify,1
